@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="雷一鸣工作室标识">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a6bff"/><stop offset="0.55" stop-color="#5b5bff"/><stop offset="1" stop-color="#7a4bff"/></linearGradient></defs>
+<rect width="64" height="64" rx="17" fill="url(#g)"/>
+<path d="M15 45h34" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"/>
+<text x="32" y="42" text-anchor="middle" font-size="33" font-weight="900" fill="#fff" font-family="Microsoft YaHei,PingFang SC,Hiragino Sans GB,sans-serif">雷</text>
+</svg>
