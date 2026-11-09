@@ -591,3 +591,7 @@ table.tbl th,table.tbl td{text-align:center}
 .footer-links{padding:8px 0}
 .footer-tech{padding:0 0 8px}
 .footer-bottom{padding:8px 0 12px}
+
+/* ================= 第三轮：工作室实景照片裁切 ================= */
+.case-shot img[src*="studio-plaque"]{object-position:center 70%}
+.split .visual.pic img[src*="studio-plaque"]{object-position:center 72%}

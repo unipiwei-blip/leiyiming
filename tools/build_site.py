@@ -357,22 +357,22 @@ def page_index():
                     f'是同济大学软件工程专业毕业生、讲师、国家二级心理咨询师，'
                     f'主编心理学教材两部、计算机专业教材一部，发表学生工作相关论文 10 余篇。</p>'
                     f'<div class="mt-m"><a class="btn btn-ghost" href="founder.html">了解主理人 {icon("arrow", 16)}</a></div>')
-    b += section(split_text_image(founder_html, "founder-lecture.jpg", "课堂与培训现场"))
+    b += section(split_text_image(founder_html, "founder-classroom.jpg", "主理人课堂授课现场"))
 
     # 育人影像三卡
     cases = [
-        case_card("svc-lecture.jpg", "专题讲座场景", "讲座交流", "面对面的交流",
-                  "讲者与学生面对面交流", ["视野拓展", "双向交流", "思维训练"],
-                  "svc-lecture.html"),
+        case_card("studio-plaque.jpg", "雷一鸣工作室牌匾", "工作室实景", "一方牌匾，一处育人平台",
+                  "书法牌匾与中式陈设", ["品牌印记", "工作室", "育人平台"],
+                  "about.html"),
+        case_card("founder-classroom.jpg", "主理人课堂授课现场", "课堂教学", "陪你更加认识自己",
+                  "在课堂上陪学生认识自己", ["价值引领", "成长引导", "课堂互动"],
+                  "founder.html"),
         case_card("activity-training.jpg", "辅导员培训交流", "实践育人", "同行研讨中的经验沉淀",
                   "在同行研讨中沉淀方法", ["同行交流", "实践体验", "经验分享"],
                   "svc-practice.html"),
-        case_card("founder-lecture.jpg", "课堂与培训现场", "育人一线", "扎根日常的陪伴",
-                  "扎根课堂与日常交流", ["价值引领", "日常关照", "持续陪伴"],
-                  "svc-thought.html"),
     ]
-    b += section(sec_head("MOMENTS / 育人影像", "在真实的相处中看见成长",
-                          "讲座、培训、班会与日常交流，构成工作室育人工作的具体场景。")
+    b += section(sec_head("SCENES / 工作室实景", "从牌匾到课堂",
+                          "工作室牌匾、课堂授课与同行交流，呈现育人工作的日常场景。")
                  + f'<div class="grid g3">{"".join(cases)}</div>')
 
     b += cta("一起把育人工作做深做实",
@@ -394,7 +394,7 @@ def page_about():
              f'在教书育人、管理育人、服务育人的模式下，帮助学生以更好的状态面对生活、面对自己、面对社会。</p>'
              f'<p class="lead">与此同时，工作室为改进大学生思想政治教育工作方式方法提供参考，'
              f'也为辅导员同仁更好地服务学生、教育学生、管理学生、引领学生提供力所能及的帮助。</p>')
-    b += section(split_text_image(intro, "svc-counseling.jpg", "线上辅导与内容分享场景"))
+    b += section(split_text_image(intro, "studio-plaque.jpg", "雷一鸣工作室牌匾"))
 
     cards = "".join(simple_card(ico, t, d, ["", "pink", "cyan"][i]) for i, (ico, t, d) in enumerate(ABOUT_CARDS))
     b += section(sec_head("PRINCIPLES / 工作理念", "关注成长需求，尊重个体差异") + f'<div class="grid g3">{cards}</div>')
@@ -498,8 +498,8 @@ def page_service(s):
                 f'<img src="assets/img/activity-training.jpg" alt="辅导员培训交流" loading="lazy">'
                 f'<p class="mt-s">辅导员培训交流</p></div>'
                 f'<div class="mini-card glass reveal">'
-                f'<img src="assets/img/founder-lecture.jpg" alt="课堂与培训现场" loading="lazy">'
-                f'<p class="mt-s">课堂与培训现场</p></div></div>')
+                f'<img src="assets/img/founder-classroom.jpg" alt="主理人课堂授课现场" loading="lazy">'
+                f'<p class="mt-s">课堂授课现场</p></div></div>')
         b += section(sec_head("MOMENTS / 育人影像", "在真实的相处中看见成长") + imgs)
 
     # 相关服务
@@ -521,7 +521,7 @@ def page_founder():
             f'同济大学软件工程专业毕业，讲师、国家二级心理咨询师，长期从事辅导员工作与大学生思想政治教育研究。</p>'
             f'<p class="lead">在十余年一线工作中，他持续记录学生成长中的故事与困惑，'
             f'撰写思想政治教育相关文章数十万字，并把这些观察转化为教材、论文与可交流的育人经验。</p>')
-    b += section(split_text_image(text, "founder-lecture.jpg", "课堂与培训现场"))
+    b += section(split_text_image(text, "founder-classroom.jpg", "主理人课堂授课现场"))
 
     b += section(sec_head("BELIEF / 育人理念", "做青年朋友的知心人、热心人、引路人")
                  + f'<div class="mini-card glass reveal"><div class="quote-mark">{icon("quote", 30)}</div>'
