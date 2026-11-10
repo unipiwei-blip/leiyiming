@@ -262,10 +262,11 @@ def cta(title, desc, buttons=None, note=""):
             f'<div class="cta-actions">{links}</div>{n}</div></div></section>')
 
 
-def page_hero(title, lead, pills=None, crumb=None):
+def page_hero(title, lead, pills=None, crumb=None, extra_cls=""):
     ps = "".join(f'<span class="pill">{p}</span>' for p in (pills or []))
     cr = (f'<div class="crumb"><a href="index.html">{BRAND}</a> / {crumb}</div>') if crumb else ""
-    return (f'<section class="page-hero"><div class="container">{cr}'
+    cls = f' {extra_cls}' if extra_cls else ''
+    return (f'<section class="page-hero{cls}"><div class="container">{cr}'
             f'<h1>{title}</h1><p>{lead}</p>'
             f'<div class="pills">{ps}</div>'
             f'</div></section>')
@@ -358,9 +359,10 @@ def article_cards():
 
 def page_articles():
     b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
-                  ARTICLE_COLUMN["tags"], "一鸣述评")
-    b += section(sec_head("LATEST / 最新述评", ARTICLE_COLUMN["list_title"],
-                          ARTICLE_COLUMN["list_lead"]) + article_cards())
+                  ARTICLE_COLUMN["tags"], extra_cls="hero-compact")
+    list_head = (f'<div class="sec-head center reveal"><h2 class="h2">{ARTICLE_COLUMN["list_title"]}</h2>'
+                 f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p></div>')
+    b += section(list_head + article_cards(), "section articles-first")
     cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
                     for k, (i, t, d) in enumerate(ARTICLE_DIRECTIONS))
     b += section(sec_head("TOPICS / 述评方向", ARTICLE_COLUMN["topics_title"])
@@ -393,13 +395,13 @@ def page_article(a):
                          f'alt="{blk["cap"]}" loading="lazy"><figcaption>{blk["cap"]}</figcaption></figure>')
     rel = [s for s in SERVICES if s["slug"] in ("svc-research", "svc-quality", "svc-counseling")]
     rel_cards = "".join(service_card(s, i) for i, s in enumerate(rel))
+    back = ('<div class="article-back center"><a class="btn btn-primary" href="articles.html">返回一鸣述评 '
+             + icon("arrow", 16) + '</a></div>')
     body = (hero
             + section(f'<div class="article-wrap">{cover}<div class="article-body">'
-                      + "".join(parts) + '</div></div>', "section article-start")
+                      + "".join(parts) + '</div>' + back + '</div>', "section article-start")
             + section(sec_head("MORE / 延伸阅读", "与述评相关的工作方向")
-                      + f'<div class="grid g3">{rel_cards}</div>'
-                      + '<div class="center mt-l"><a class="btn btn-primary" href="articles.html">返回一鸣述评 '
-                      + icon("arrow", 16) + '</a></div>'))
+                      + f'<div class="grid g3">{rel_cards}</div>', "section rel-tight"))
     ld = {"@context": "https://schema.org", "@type": "Article",
           "headline": a["title"], "datePublished": a["date_iso"],
           "author": {"@type": "Organization", "name": BRAND},

@@ -670,3 +670,15 @@ table.tbl th,table.tbl td{text-align:center}
 .article-start{padding:18px 0}
 .article-start .article-figure:first-child{margin-top:0}
 .article-figure{margin:26px auto}
+
+/* ================= 第七轮：栏目页首屏精简 / 文章返回按钮 ================= */
+.page-hero.hero-compact{padding:46px 0 20px}
+.page-hero.hero-compact .pills{margin-top:18px}
+.section.articles-first{padding:26px 0 60px}
+.section.articles-first .sec-head{margin-bottom:30px}
+.article-back{margin-top:34px}
+.section.rel-tight{padding:26px 0}
+@media(max-width:640px){
+  .page-hero.hero-compact{padding:36px 0 16px}
+  .section.articles-first{padding:22px 0 44px}
+}
