@@ -663,3 +663,10 @@ table.tbl th,table.tbl td{text-align:center}
 /* 文章正文：居左、首行空两字符 */
 .article-body p{text-align:left;text-indent:2em}
 .article-body p.article-h{text-align:left;text-indent:2em}
+
+/* ================= 第六轮：文章页头部精简 ================= */
+.article-hero{padding:34px 0 14px}
+.article-hero .crumb{text-align:left}
+.article-start{padding:18px 0}
+.article-start .article-figure:first-child{margin-top:0}
+.article-figure{margin:26px auto}

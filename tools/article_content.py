@@ -12,11 +12,8 @@ ARTICLES = [
         "full_title": "一鸣述评｜当AI无所不能，我们为什么还要守护那些“冷门绝学”？",
         "summary": "从教师、学生、社会与教育四个角度，重新思考大学的价值与知识守护的意义。",
         "teaser": "四个角度重看大学价值",
-        "cover": "article-cover.jpg",
-        "cover_alt": "冷门绝学学院成立仪式现场",
-        "body_image": "svc-research.jpg",
-        "body_image_cap": "教学研讨场景",
-        "body_image_after": 2,
+        "cover": "svc-research.jpg",
+        "cover_alt": "教学研讨场景",
         "tags": [
             "教育观察",
             "冷门绝学",
@@ -37,11 +34,6 @@ ARTICLES = [
             {
                 "t": "p",
                 "x": "但中国社会科学院大学此次成立冷门绝学学院，恰恰让我们有机会重新思考一个问题：是不是所有值得做的事情，都必须拥有庞大的市场？是不是所有有价值的知识，都必须在短时间内产生看得见的回报？"
-            },
-            {
-                "t": "img",
-                "src": "svc-research.jpg",
-                "cap": "教学研讨场景"
             },
             {
                 "t": "p",
@@ -173,9 +165,6 @@ ARTICLES = [
         "teaser": "技术进入课堂的边界",
         "cover": "cover-taitoulv.jpg",
         "cover_alt": "教室里被摄像头环绕的学生漫画",
-        "body_image": "founder-classroom.jpg",
-        "body_image_cap": "课堂授课现场",
-        "body_image_after": 8,
         "tags": [
             "教育观察",
             "智慧教育",
@@ -220,11 +209,6 @@ ARTICLES = [
             {
                 "t": "p",
                 "x": "大学生已经是具有独立思考能力的成年人。大学教育与中小学教育的重要区别之一，就在于它不仅要求学生掌握知识，更强调自主学习、独立判断和批判性思维。学生走进大学课堂，不意味着必须始终保持同一个姿势，更不意味着只有眼睛看着讲台，才算认真学习。"
-            },
-            {
-                "t": "img",
-                "src": "founder-classroom.jpg",
-                "cap": "课堂授课现场"
             },
             {
                 "t": "p",
@@ -314,11 +298,8 @@ ARTICLES = [
         "full_title": "一鸣述评｜从选题到发表：AI时代高校教师如何做好一篇有质量的原创科研论文",
         "summary": "从选题、破题、题目、摘要、文献综述、创新点到行文，梳理AI时代高校教师的科研写作方法。",
         "teaser": "从选题到行文的科研方法",
-        "cover": "svc-research.jpg",
-        "cover_alt": "教学研讨场景",
-        "body_image": "svc-lecture.jpg",
-        "body_image_cap": "专题讲座场景",
-        "body_image_after": 12,
+        "cover": "svc-lecture.jpg",
+        "cover_alt": "专题讲座场景",
         "tags": [
             "教育观察",
             "科研写作",
@@ -379,11 +360,6 @@ ARTICLES = [
             {
                 "t": "h",
                 "x": "二、破题：把一个现象转化为一个可以研究的问题"
-            },
-            {
-                "t": "img",
-                "src": "svc-lecture.jpg",
-                "cap": "专题讲座场景"
             },
             {
                 "t": "p",
@@ -651,9 +627,6 @@ ARTICLES = [
         "teaser": "普通人的缴费能力",
         "cover": "cover-shebao.jpg",
         "cover_alt": "社会保障主题插画",
-        "body_image": "svc-counseling.jpg",
-        "body_image_cap": "线上交流场景",
-        "body_image_after": 5,
         "tags": [
             "社会观察",
             "劳动者",
@@ -686,11 +659,6 @@ ARTICLES = [
             {
                 "t": "p",
                 "x": "类似的困境，也存在于个体经营者、自由职业者和一些收入不稳定的普通劳动者身上。有人开着小店，营业额看似不错，扣除房租、人工、水电和进货成本，真正落到自己手里的钱却并不多；有人靠写作、设计、培训等工作维持生计，忙的时候收入尚可，淡季却可能连续数周没有稳定进账。他们并非不愿意为未来负责，而是生活中没有多少可以随意支配的余地。把这些人简单归结为缺乏保障意识，既不公平，也无法真正解决问题。"
-            },
-            {
-                "t": "img",
-                "src": "svc-counseling.jpg",
-                "cap": "线上交流场景"
             },
             {
                 "t": "h",
@@ -744,11 +712,8 @@ ARTICLES = [
         "full_title": "辅导员工作室展示④ | 雷一鸣工作室",
         "summary": "工作室定位、六大核心素质培养与线上+线下育人模式的系统介绍。",
         "teaser": "工作室定位与育人模式",
-        "cover": "cover-zhanshi.jpg",
-        "cover_alt": "主理人在培训现场发言",
-        "body_image": "studio-plaque.jpg",
-        "body_image_cap": "工作室书法牌匾",
-        "body_image_after": 8,
+        "cover": "svc-practice.jpg",
+        "cover_alt": "团队协作实践场景",
         "tags": [
             "工作室介绍",
             "辅导员",
@@ -785,11 +750,6 @@ ARTICLES = [
             {
                 "t": "h",
                 "x": "工作室介绍"
-            },
-            {
-                "t": "img",
-                "src": "studio-plaque.jpg",
-                "cap": "工作室书法牌匾"
             },
             {
                 "t": "p",

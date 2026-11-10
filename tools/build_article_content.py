@@ -19,7 +19,7 @@ META = [
         "full_title": "一鸣述评｜当AI无所不能，我们为什么还要守护那些“冷门绝学”？",
         "summary": "从教师、学生、社会与教育四个角度，重新思考大学的价值与知识守护的意义。",
         "teaser": "四个角度重看大学价值",
-        "cover": "article-cover.jpg", "cover_alt": "冷门绝学学院成立仪式现场",
+        "cover": "svc-research.jpg", "cover_alt": "教学研讨场景",
         "body_image": "svc-research.jpg", "body_image_cap": "教学研讨场景", "body_image_after": 2,
         "tags": ["教育观察", "冷门绝学", "人工智能", "大学价值"],
         "keywords": "一鸣述评,冷门绝学,人工智能,大学教育,雷一鸣工作室,教育观察",
@@ -51,7 +51,7 @@ META = [
         "full_title": "一鸣述评｜从选题到发表：AI时代高校教师如何做好一篇有质量的原创科研论文",
         "summary": "从选题、破题、题目、摘要、文献综述、创新点到行文，梳理AI时代高校教师的科研写作方法。",
         "teaser": "从选题到行文的科研方法",
-        "cover": "svc-research.jpg", "cover_alt": "教学研讨场景",
+        "cover": "svc-lecture.jpg", "cover_alt": "专题讲座场景",
         "body_image": "svc-lecture.jpg", "body_image_cap": "专题讲座场景", "body_image_after": 12,
         "tags": ["教育观察", "科研写作", "人工智能", "教师发展"],
         "keywords": "一鸣述评,科研论文,选题,文献综述,AI写作,高校教师",
@@ -83,7 +83,7 @@ META = [
         "full_title": "辅导员工作室展示④ | 雷一鸣工作室",
         "summary": "工作室定位、六大核心素质培养与线上+线下育人模式的系统介绍。",
         "teaser": "工作室定位与育人模式",
-        "cover": "cover-zhanshi.jpg", "cover_alt": "主理人在培训现场发言",
+        "cover": "svc-practice.jpg", "cover_alt": "团队协作实践场景",
         "body_image": "studio-plaque.jpg", "body_image_cap": "工作室书法牌匾", "body_image_after": 8,
         "tags": ["工作室介绍", "辅导员", "六大核心素质", "育人模式"],
         "keywords": "雷一鸣工作室,辅导员工作室,工作室定位,六大核心素质,线上+线下",
@@ -126,10 +126,9 @@ for cfg in META:
         if not s:
             continue
         blocks.append({"t": "h" if is_h(i, s, cfg) else "p", "x": s})
-        if i == cfg["body_image_after"]:
-            blocks.append({"t": "img", "src": cfg["body_image"], "cap": cfg["body_image_cap"]})
     art = {k: v for k, v in cfg.items() if k not in
-           ("paras", "highlight_idx", "highlight_kw", "highlight_short", "drop_kw", "drop_exact")}
+           ("paras", "highlight_idx", "highlight_kw", "highlight_short", "drop_kw", "drop_exact",
+            "body_image", "body_image_cap", "body_image_after")}
     art["blocks"] = blocks
     articles.append(art)
     print(cfg["slug"], "原始段", len(raw), "-> blocks", len(blocks),

@@ -375,9 +375,8 @@ def page_article(a):
     tags = "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
     hero = f'''<section class="article-hero"><div class="container">
 <div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">一鸣述评</a> / 正文</div>
-<span class="pill">{a["label"]}</span>
 <h1>{a["title"]}</h1>
-<p class="article-meta">{BRAND} · {a["date"]}</p>
+<p class="article-meta">{a["date"]}</p>
 <p class="article-lead">{a["summary"]}</p>
 <div class="pills">{tags}</div>
 </div></section>'''
@@ -396,7 +395,7 @@ def page_article(a):
     rel_cards = "".join(service_card(s, i) for i, s in enumerate(rel))
     body = (hero
             + section(f'<div class="article-wrap">{cover}<div class="article-body">'
-                      + "".join(parts) + '</div></div>', "section tight")
+                      + "".join(parts) + '</div></div>', "section article-start")
             + section(sec_head("MORE / 延伸阅读", "与述评相关的工作方向")
                       + f'<div class="grid g3">{rel_cards}</div>'
                       + '<div class="center mt-l"><a class="btn btn-primary" href="articles.html">返回一鸣述评 '
