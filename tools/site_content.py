@@ -17,6 +17,7 @@ NAV = [
     ("六大核心素质", "svc-quality.html", "svc-quality"),
     ("育人实践", "svc-practice.html", "svc-practice"),
     ("教研探索", "svc-research.html", "svc-research"),
+    ("一鸣述评", "articles.html", "articles"),
     ("主理人", "founder.html", "founder"),
     ("联系我们", "contact.html", "contact"),
 ]
@@ -255,3 +256,20 @@ FOUNDER = {
         ]),
     ],
 }
+
+
+# 「一鸣述评」栏目
+ARTICLE_COLUMN = {
+    "lead": "围绕大学教育、青年成长与时代变化的观察与思考。",
+    "tags": ["教育观察", "成长思考", "学术评论"],
+    "list_title": "把对教育的思考写下来",
+    "list_lead": "从一所大学、一个专业、一次变化出发，讨论那些值得被认真对待的问题。",
+    "topics_title": "常被谈起的三类问题",
+    "desc": "一鸣述评是雷一鸣工作室的观点栏目，围绕大学教育、青年成长与学术积累展开观察与思考。",
+}
+
+ARTICLE_DIRECTIONS = [
+    ("cap", "大学价值", "基础学科与人才培养"),
+    ("users", "青年成长", "专业选择与成长路径"),
+    ("book", "学术积累", "知识传承与时代变化"),
+]

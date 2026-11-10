@@ -595,3 +595,27 @@ table.tbl th,table.tbl td{text-align:center}
 /* ================= 第三轮：工作室实景照片裁切 ================= */
 .case-shot img[src*="studio-plaque"]{object-position:center 70%}
 .split .visual.pic img[src*="studio-plaque"]{object-position:center 72%}
+
+/* ================= 第四轮：一鸣述评栏目 ================= */
+.nav-menu a{padding:9px 10px;font-size:13.5px}
+.nav .container{gap:18px}
+@media(min-width:901px) and (max-width:1100px){.nav-menu a{padding:9px 7px;font-size:12.5px}.nav .container{gap:12px}}
+.article-teaser{display:grid;grid-template-columns:1fr 1fr;max-width:1000px;margin:0 auto;overflow:hidden;border-radius:var(--r);padding:0}
+.article-teaser>img{width:100%;height:100%;min-height:290px;object-fit:cover;display:block;margin:0}
+.teaser-copy{padding:34px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.teaser-copy h3{font-size:clamp(19px,2vw,25px);font-weight:900;line-height:1.5;margin-top:14px;color:var(--ink)}
+.teaser-copy p{margin-top:10px;color:var(--muted);font-size:14px}
+.teaser-copy .mt-m{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.article-hero{position:relative;overflow:hidden;padding:64px 0 48px;text-align:center}
+.article-hero::before{content:"";position:absolute;left:50%;top:-190px;transform:translateX(-50%);width:820px;height:430px;background:radial-gradient(ellipse,rgba(26,107,255,.18),transparent 68%);filter:blur(18px)}
+.article-hero .container{position:relative;z-index:1}
+.article-hero h1{font-size:clamp(26px,3.1vw,40px);font-weight:900;line-height:1.4;letter-spacing:-.02em;max-width:900px;margin:18px auto 0;color:var(--ink)}
+.article-meta{font-size:13px;color:var(--muted);font-weight:700;margin-top:18px}
+.article-lead{font-size:15.5px;color:var(--muted);line-height:1.9;max-width:760px;margin:16px auto 0}
+.article-wrap{max-width:880px;margin:0 auto}
+.article-body p{font-size:16px;line-height:2.15;color:var(--ink-2);margin:0 auto 22px;text-align:center;max-width:820px}
+.article-body p.article-h{font-size:18px;font-weight:900;color:var(--blue-deep);line-height:1.9;margin:38px auto 22px;padding:0 18px}
+.article-figure{margin:34px auto;text-align:center;max-width:820px}
+.article-figure img{width:100%;max-width:760px;border-radius:18px;border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);display:block;margin:0 auto}
+.article-figure figcaption{font-size:12.5px;color:var(--muted);margin-top:11px}
+@media(max-width:900px){.article-teaser{grid-template-columns:1fr}.article-teaser>img{height:220px;min-height:0}.teaser-copy{padding:26px}}

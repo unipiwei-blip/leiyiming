@@ -10,8 +10,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_content import (  # noqa: E402
     BRAND, SLOGAN, TOPBAR_LEFT, TOPBAR_RIGHT, FOOTER_ABOUT, COPYRIGHT_NOTE,
     NAV, FRIEND_LINKS, FOOT_BIZ, CONTACT_CHANNELS, STATS, ABOUT_CARDS, SITE_URL,
-    FEATURES, DIRECTIONS, FLOW, SERVICES, FAQ, FOUNDER,
+    FEATURES, DIRECTIONS, FLOW, SERVICES, FAQ, FOUNDER, ARTICLE_COLUMN, ARTICLE_DIRECTIONS,
 )
+from article_content import ARTICLE  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SVC = {s["slug"]: s for s in SERVICES}
@@ -78,6 +79,8 @@ def head(page, title, desc, keywords):
     # 未列入主导航的业务页，归入「服务体系」栏目高亮
     if key in ("svc-thought", "svc-lecture", "svc-counseling"):
         key = "services"
+    if key.startswith("article-"):
+        key = "articles"
     ld = {
         "@context": "https://schema.org",
         "@graph": [
@@ -306,6 +309,74 @@ def hero_art():
 </div></div></div></section>'''
 
 
+def article_teaser():
+    a = ARTICLE
+    return f'''<article class="article-teaser glass reveal">
+<img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy">
+<div class="teaser-copy">
+<span class="pill">{a["column"]} · {a["date"]}</span>
+<h3 class="h3">{a["title"]}</h3>
+<p class="one-line">{a["teaser"]}</p>
+<div class="mt-m"><a class="btn btn-primary" href="{a["slug"]}">阅读述评 {icon("arrow", 16)}</a>
+<a class="btn btn-ghost" href="articles.html">述评栏目</a></div>
+</div></article>'''
+
+
+def page_articles():
+    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
+                  ARTICLE_COLUMN["tags"], "一鸣述评")
+    b += section(sec_head("LATEST / 最新述评", ARTICLE_COLUMN["list_title"],
+                          ARTICLE_COLUMN["list_lead"]) + article_teaser())
+    cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
+                    for k, (i, t, d) in enumerate(ARTICLE_DIRECTIONS))
+    b += section(sec_head("TOPICS / 述评方向", ARTICLE_COLUMN["topics_title"])
+                 + f'<div class="grid g3">{cards}</div>')
+    b += cta("围绕教育话题继续交流", "关于大学教育、青年成长与学术积累的话题，欢迎进一步沟通。",
+             [("交流合作", "contact.html", "btn-white"), ("返回首页", "index.html", "btn-outline")])
+    return shell("articles.html", "一鸣述评", ARTICLE_COLUMN["desc"],
+                 "一鸣述评,教育观察,雷一鸣工作室,冷门绝学", b, "articles")
+
+
+def page_article():
+    a = ARTICLE
+    tags = "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
+    hero = f'''<section class="article-hero"><div class="container">
+<div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">{a["column"]}</a> / 最新述评</div>
+<span class="pill">{a["column"]}</span>
+<h1>{a["title"]}</h1>
+<p class="article-meta">{BRAND} · {a["date"]}</p>
+<p class="article-lead">{a["summary"]}</p>
+<div class="pills">{tags}</div>
+</div></section>'''
+    cover = (f'<figure class="article-figure"><img src="assets/img/{a["cover"]}" '
+             f'alt="{a["cover_alt"]}" loading="lazy"><figcaption>{a["cover_alt"]}</figcaption></figure>')
+    parts = []
+    for blk in a["blocks"]:
+        if blk["t"] == "h":
+            parts.append(f'<p class="article-h">{blk["x"]}</p>')
+        elif blk["t"] == "p":
+            parts.append(f'<p>{blk["x"]}</p>')
+        else:
+            parts.append(f'<figure class="article-figure"><img src="assets/img/{blk["src"]}" '
+                         f'alt="{blk["cap"]}" loading="lazy"><figcaption>{blk["cap"]}</figcaption></figure>')
+    rel = [s for s in SERVICES if s["slug"] in ("svc-research", "svc-quality", "svc-counseling")]
+    rel_cards = "".join(service_card(s, i) for i, s in enumerate(rel))
+    body = (hero
+            + section(f'<div class="article-wrap">{cover}<div class="article-body">'
+                      + "".join(parts) + '</div></div>', "section tight")
+            + section(sec_head("MORE / 延伸阅读", "与述评相关的工作方向")
+                      + f'<div class="grid g3">{rel_cards}</div>'
+                      + '<div class="center mt-l"><a class="btn btn-primary" href="articles.html">返回一鸣述评 '
+                      + icon("arrow", 16) + '</a></div>'))
+    ld = {"@context": "https://schema.org", "@type": "Article",
+          "headline": a["title"], "datePublished": a["date_iso"],
+          "author": {"@type": "Organization", "name": BRAND},
+          "publisher": {"@type": "Organization", "name": BRAND},
+          "description": a["desc"], "inLanguage": "zh-CN"}
+    body = '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + '</script>' + body
+    return shell(a["slug"], a["full_title"], a["desc"], a["keywords"], body, "articles")
+
+
 def page_index():
     b = '<section class="hero">' + hero_art()
     b += stats_strip()
@@ -375,6 +446,9 @@ def page_index():
                           "工作室牌匾、课堂授课与同行交流，呈现育人工作的日常场景。")
                  + f'<div class="grid g3">{"".join(cases)}</div>')
 
+    b += section(sec_head("PERSPECTIVES / 一鸣述评", "把对教育的思考写下来",
+                          "围绕大学教育、青年成长与时代变化的观察与思考。")
+                 + article_teaser())
     b += cta("一起把育人工作做深做实",
              "围绕专题讲座、育人实践共建、辅导员教研交流等方向，欢迎高校、辅导员同仁与青年学生开展交流。",
              note="以大学生思想政治教育为核心，注重实践创新与学术研究。")
@@ -590,7 +664,8 @@ def page_sitemap():
         group("主导航", "grid", [(t, h) for t, h, _ in NAV]),
         group("服务体系", "layers", [(s["title"], s["slug"] + ".html") for s in SERVICES]),
         group("更多信息", "link", [("工作室简介", "about.html"), ("主理人", "founder.html"),
-                                  ("联系我们", "contact.html"), ("网站地图", "sitemap.html")]),
+                                  ("联系我们", "contact.html"), ("网站地图", "sitemap.html"),
+                                  ("一鸣述评", "articles.html"), ("最新述评 · 冷门绝学", ARTICLE["slug"])]),
     ]
     b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部内容")
                  + f'<div class="grid g3">{"".join(groups)}</div>')
@@ -616,11 +691,14 @@ def main():
     write("founder.html", page_founder())
     write("contact.html", page_contact())
     write("sitemap.html", page_sitemap())
+    write("articles.html", page_articles())
+    write(ARTICLE["slug"], page_article())
     for s in SERVICES:
         write(s["slug"] + ".html", page_service(s))
 
     # 站点级文件：域名统一取自 SITE_URL
-    pages = ["index.html"] + [x[1] for x in NAV[1:]] + [s["slug"] + ".html" for s in SERVICES] + ["sitemap.html"]
+    pages = (["index.html"] + [x[1] for x in NAV[1:]] + [s["slug"] + ".html" for s in SERVICES]
+             + ["sitemap.html", ARTICLE["slug"]])
     seen, urls = set(), []
     for pg in pages:
         if pg in seen:
