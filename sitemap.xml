@@ -3,15 +3,20 @@
   <url><loc>https://www.oals.cn/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.oals.cn/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/services.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.oals.cn/svc-quality.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/counseling.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/svc-practice.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/svc-research.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/articles.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.oals.cn/founder.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/svc-thought.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/svc-quality.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/svc-lecture.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/svc-counseling.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/sitemap.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/founder.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.oals.cn/article-lengmen-juexue.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/article-taitoulv.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/article-keyan-xiezuo.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/article-shebao.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.oals.cn/article-studio-intro.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

@@ -11,7 +11,9 @@ EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 PAGES = ["index.html", "about.html", "services.html", "svc-quality.html",
          "svc-practice.html", "svc-thought.html", "svc-lecture.html",
          "svc-counseling.html", "svc-research.html", "founder.html",
-         "contact.html", "sitemap.html", "articles.html", "article-lengmen-juexue.html"]
+         "contact.html", "sitemap.html", "articles.html", "counseling.html",
+         "article-lengmen-juexue.html", "article-taitoulv.html",
+         "article-keyan-xiezuo.html", "article-shebao.html", "article-studio-intro.html"]
 
 
 def url(name):

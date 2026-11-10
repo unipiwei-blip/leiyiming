@@ -64,3 +64,31 @@
     el.textContent = new Date().getFullYear();
   });
 })();
+
+/* 一鸣述评列表翻页（纯静态，无后端） */
+(function () {
+  'use strict';
+  var cards = [].slice.call(document.querySelectorAll('.article-card[data-page]'));
+  if (!cards.length) return;
+  var btns = [].slice.call(document.querySelectorAll('.pager [data-go]'));
+  var total = 0;
+  cards.forEach(function (c) { total = Math.max(total, parseInt(c.getAttribute('data-page'), 10) || 1); });
+  var cur = 1;
+  function show(n) {
+    cur = Math.max(1, Math.min(n, total));
+    cards.forEach(function (c) { c.hidden = (parseInt(c.getAttribute('data-page'), 10) !== cur); });
+    btns.forEach(function (b) {
+      var g = b.getAttribute('data-go');
+      if (g === 'prev') b.disabled = (cur === 1);
+      else if (g === 'next') b.disabled = (cur === total);
+      else b.classList.toggle('active', parseInt(g, 10) === cur);
+    });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var g = b.getAttribute('data-go');
+      show(g === 'prev' ? cur - 1 : g === 'next' ? cur + 1 : parseInt(g, 10));
+    });
+  });
+  show(1);
+})();

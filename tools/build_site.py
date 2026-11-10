@@ -11,8 +11,9 @@ from site_content import (  # noqa: E402
     BRAND, SLOGAN, TOPBAR_LEFT, TOPBAR_RIGHT, FOOTER_ABOUT, COPYRIGHT_NOTE,
     NAV, FRIEND_LINKS, FOOT_BIZ, CONTACT_CHANNELS, STATS, ABOUT_CARDS, SITE_URL,
     FEATURES, DIRECTIONS, FLOW, SERVICES, FAQ, FOUNDER, ARTICLE_COLUMN, ARTICLE_DIRECTIONS,
+    SUBNAV, COUNSELING,
 )
-from article_content import ARTICLE  # noqa: E402
+from article_content import ARTICLES, ARTICLE  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SVC = {s["slug"]: s for s in SERVICES}
@@ -126,13 +127,29 @@ def topbar():
 
 
 def nav(active):
-    items = "".join(
-        f'<a href="{href}" data-nav="{key}">{label}</a>' for label, href, key in NAV
-    )
+    parent_active = set()
+    for key, subs in SUBNAV.items():
+        if active in [k for _, _, k in subs]:
+            parent_active.add(key)
+    items = []
+    for label, href, key in NAV:
+        subs = SUBNAV.get(key)
+        if not subs:
+            items.append(f'<a href="{href}" data-nav="{key}">{label}</a>')
+            continue
+        sub_parts = []
+        for t, h, k in subs:
+            attr = "" if k == key else f' data-nav="{k}"'
+            sub_parts.append(f'<a href="{h}"{attr}>{t}</a>')
+        sub = "".join(sub_parts)
+        cls = " parent-active" if key in parent_active else ""
+        items.append(f'<div class="nav-item{cls}"><a href="{href}" data-nav="{key}">'
+                     f'{label}<i class="caret" aria-hidden="true"></i></a>'
+                     f'<div class="submenu">{sub}</div></div>')
     return (f'<header class="nav"><div class="container">'
             f'<a class="brand" href="index.html" aria-label="{BRAND}">'
             f'<img src="assets/img/logo.svg" alt="{BRAND}"><span class="brand-txt"><strong>{BRAND}</strong></span></a>'
-            f'<nav class="nav-menu" aria-label="主导航">{items}</nav>'
+            f'<nav class="nav-menu" aria-label="主导航">{"".join(items)}</nav>'
             f'<a class="btn btn-primary nav-cta" href="contact.html">{icon("chat", 15)} 交流合作</a>'
             f'<button class="menu-btn" aria-label="展开导航菜单" aria-expanded="false"><i></i></button>'
             f'</div></header>')
@@ -309,24 +326,41 @@ def hero_art():
 </div></div></div></section>'''
 
 
-def article_teaser():
-    a = ARTICLE
-    return f'''<article class="article-teaser glass reveal">
-<img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy">
-<div class="teaser-copy">
-<span class="pill">{a["column"]} · {a["date"]}</span>
-<h3 class="h3">{a["title"]}</h3>
-<p class="one-line">{a["teaser"]}</p>
-<div class="mt-m"><a class="btn btn-primary" href="{a["slug"]}">阅读述评 {icon("arrow", 16)}</a>
-<a class="btn btn-ghost" href="articles.html">述评栏目</a></div>
-</div></article>'''
+def article_mini_grid():
+    cards = []
+    for i, a in enumerate(ARTICLES[:3]):
+        cards.append(f'''<a class="article-mini glass reveal d{i}" href="{a["slug"]}">
+<div class="mini-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
+<div class="mini-copy"><span class="pill">{a["label"]} · {a["date"]}</span>
+<h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p></div>
+</a>''')
+    more = ('<div class="center mt-l"><a class="btn btn-primary" href="articles.html">查看全部述评 '
+            + icon("arrow", 16) + '</a></div>')
+    return f'<div class="grid g3 article-mini-grid">{"".join(cards)}</div>' + more
+
+
+def article_cards():
+    cards, per = [], 4
+    for i, a in enumerate(ARTICLES):
+        pg = i // per + 1
+        cards.append(f'''<a class="article-card glass reveal" href="{a["slug"]}" data-page="{pg}">
+<div class="article-card-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
+<div class="article-card-body"><span class="pill">{a["label"]} · {a["date"]}</span>
+<h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p>
+<span class="link-more">阅读述评 {icon("arrow", 15)}</span></div></a>''')
+    total = (len(ARTICLES) + per - 1) // per
+    nums = "".join(f'<button class="page-num{" active" if n == 1 else ""}" data-go="{n}">{n}</button>'
+                   for n in range(1, total + 1))
+    pager = ('<div class="pager"><button data-go="prev">上一页</button>' + nums
+             + '<button data-go="next">下一页</button></div>')
+    return f'<div class="article-grid">{"".join(cards)}</div>' + pager
 
 
 def page_articles():
     b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
                   ARTICLE_COLUMN["tags"], "一鸣述评")
     b += section(sec_head("LATEST / 最新述评", ARTICLE_COLUMN["list_title"],
-                          ARTICLE_COLUMN["list_lead"]) + article_teaser())
+                          ARTICLE_COLUMN["list_lead"]) + article_cards())
     cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
                     for k, (i, t, d) in enumerate(ARTICLE_DIRECTIONS))
     b += section(sec_head("TOPICS / 述评方向", ARTICLE_COLUMN["topics_title"])
@@ -334,15 +368,14 @@ def page_articles():
     b += cta("围绕教育话题继续交流", "关于大学教育、青年成长与学术积累的话题，欢迎进一步沟通。",
              [("交流合作", "contact.html", "btn-white"), ("返回首页", "index.html", "btn-outline")])
     return shell("articles.html", "一鸣述评", ARTICLE_COLUMN["desc"],
-                 "一鸣述评,教育观察,雷一鸣工作室,冷门绝学", b, "articles")
+                 "一鸣述评,教育观察,雷一鸣工作室,述评文章", b, "articles")
 
 
-def page_article():
-    a = ARTICLE
+def page_article(a):
     tags = "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
     hero = f'''<section class="article-hero"><div class="container">
-<div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">{a["column"]}</a> / 最新述评</div>
-<span class="pill">{a["column"]}</span>
+<div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">一鸣述评</a> / 正文</div>
+<span class="pill">{a["label"]}</span>
 <h1>{a["title"]}</h1>
 <p class="article-meta">{BRAND} · {a["date"]}</p>
 <p class="article-lead">{a["summary"]}</p>
@@ -375,6 +408,28 @@ def page_article():
           "description": a["desc"], "inLanguage": "zh-CN"}
     body = '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + '</script>' + body
     return shell(a["slug"], a["full_title"], a["desc"], a["keywords"], body, "articles")
+
+
+def page_counseling():
+    c = COUNSELING
+    b = page_hero("心理咨询", c["lead"], c["tags"], "心理咨询")
+    text = ('<div class="eyebrow">GUIDANCE / 成长交流</div><h2 class="h2">'
+            + c["intro_title"] + '</h2>'
+            + "".join(f'<p class="lead">{p}</p>' for p in c["intro"]))
+    b += section(split_text_image(text, "svc-counseling.jpg", "线上交流场景"))
+    cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
+                    for k, (i, t, d) in enumerate(c["cards"]))
+    b += section(sec_head("FOCUS / 交流主题", "常被谈起的三个方向")
+                 + f'<div class="grid g3">{cards}</div>')
+    ways = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
+                   for k, (i, t, d) in enumerate(c["ways"]))
+    b += section(sec_head("METHODS / 交流方式", "线上与线下相互补充")
+                 + f'<div class="grid g3">{ways}</div>')
+    b += section(sec_head("BACKGROUND / 专业基础", "育人实践中的长期积累")
+                 + f'<div class="mini-card glass reveal"><p>{c["basis"]}</p></div>', "section tight")
+    b += cta("把想说的话说出来", "围绕成长中的困惑与选择，欢迎通过公众号或咨询二维码发起交流。",
+             [("交流合作", "contact.html", "btn-white"), ("了解服务体系", "services.html", "btn-outline")])
+    return shell("counseling.html", "心理咨询", c["desc"], c["keywords"], b, "counseling")
 
 
 def page_index():
@@ -448,7 +503,7 @@ def page_index():
 
     b += section(sec_head("PERSPECTIVES / 一鸣述评", "把对教育的思考写下来",
                           "围绕大学教育、青年成长与时代变化的观察与思考。")
-                 + article_teaser())
+                 + article_mini_grid())
     b += cta("一起把育人工作做深做实",
              "围绕专题讲座、育人实践共建、辅导员教研交流等方向，欢迎高校、辅导员同仁与青年学生开展交流。",
              note="以大学生思想政治教育为核心，注重实践创新与学术研究。")
@@ -663,9 +718,9 @@ def page_sitemap():
     groups = [
         group("主导航", "grid", [(t, h) for t, h, _ in NAV]),
         group("服务体系", "layers", [(s["title"], s["slug"] + ".html") for s in SERVICES]),
-        group("更多信息", "link", [("工作室简介", "about.html"), ("主理人", "founder.html"),
-                                  ("联系我们", "contact.html"), ("网站地图", "sitemap.html"),
-                                  ("一鸣述评", "articles.html"), ("最新述评 · 冷门绝学", ARTICLE["slug"])]),
+        group("更多信息", "link", [("主理人", "founder.html"), ("六大核心素质", "svc-quality.html"),
+                                  ("一鸣述评", "articles.html"), ("网站地图", "sitemap.html")]
+              + [(a["card_title"], a["slug"]) for a in ARTICLES]),
     ]
     b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部内容")
                  + f'<div class="grid g3">{"".join(groups)}</div>')
@@ -692,13 +747,15 @@ def main():
     write("contact.html", page_contact())
     write("sitemap.html", page_sitemap())
     write("articles.html", page_articles())
-    write(ARTICLE["slug"], page_article())
+    write("counseling.html", page_counseling())
+    for a in ARTICLES:
+        write(a["slug"], page_article(a))
     for s in SERVICES:
         write(s["slug"] + ".html", page_service(s))
 
     # 站点级文件：域名统一取自 SITE_URL
     pages = (["index.html"] + [x[1] for x in NAV[1:]] + [s["slug"] + ".html" for s in SERVICES]
-             + ["sitemap.html", ARTICLE["slug"]])
+             + ["sitemap.html", "founder.html"] + [a["slug"] for a in ARTICLES])
     seen, urls = set(), []
     for pg in pages:
         if pg in seen:

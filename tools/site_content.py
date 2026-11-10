@@ -14,11 +14,10 @@ NAV = [
     ("首页", "index.html", "index"),
     ("工作室简介", "about.html", "about"),
     ("服务体系", "services.html", "services"),
-    ("六大核心素质", "svc-quality.html", "svc-quality"),
+    ("心理咨询", "counseling.html", "counseling"),
     ("育人实践", "svc-practice.html", "svc-practice"),
     ("教研探索", "svc-research.html", "svc-research"),
     ("一鸣述评", "articles.html", "articles"),
-    ("主理人", "founder.html", "founder"),
     ("联系我们", "contact.html", "contact"),
 ]
 
@@ -273,3 +272,35 @@ ARTICLE_DIRECTIONS = [
     ("users", "青年成长", "专业选择与成长路径"),
     ("book", "学术积累", "知识传承与时代变化"),
 ]
+
+
+# 主导航二级栏目
+SUBNAV = {
+    "about": [("工作室简介", "about.html", "about"),
+              ("主理人", "founder.html", "founder")],
+    "services": [("服务体系总览", "services.html", "services"),
+                 ("六大核心素质", "svc-quality.html", "svc-quality")],
+}
+
+COUNSELING = {
+    "lead": "以倾听为先，陪伴学生面对成长中的困惑与选择。",
+    "tags": ["一对一交流", "身心素质", "持续跟进"],
+    "intro_title": "把困惑说出来，才有一起梳理的开始",
+    "intro": [
+        "工作室关注大学生的成长需求，注重个体差异。学业压力、人际关系、情绪起伏与自我认识，都是青年学生在校期间常常面对的课题。",
+        "在平等、安静的交流中，先听清学生真实的处境，再一起梳理可行的方向；不替学生作决定，也不让问题悬空。",
+    ],
+    "cards": [
+        ("message", "情绪与适应", "面对压力与情绪起伏"),
+        ("users", "学业与人际", "梳理学习状态与相处困扰"),
+        ("spark", "自我认识", "在交流中看清兴趣方向"),
+    ],
+    "ways": [
+        ("globe", "线上交流", "网络平台答疑与分享"),
+        ("users", "线下面谈", "谈心谈话与小组交流"),
+        ("clock", "持续跟进", "保留长期沟通空间"),
+    ],
+    "basis": "工作室主持人雷一鸣（雷桂平）为国家二级心理咨询师，曾主编心理学教材两部，长期从事辅导员工作与大学生思想政治教育研究。",
+    "desc": "雷一鸣工作室成长交流方向：以倾听为先的一对一沟通，围绕情绪与适应、学业人际与自我认识展开。",
+    "keywords": "心理咨询,成长辅导,国家二级心理咨询师,一对一交流,雷一鸣工作室",
+}

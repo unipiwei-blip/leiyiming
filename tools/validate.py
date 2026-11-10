@@ -12,7 +12,7 @@ BAD = [
     "example.com", "粤ICP备 00000000", "进入板块", "专页", "示意", "点击查看",
     "本组", "同组", "中文转载", "本次检索", "未核到",
 ]
-FORBIDDEN_EXACT = ["—", "–"]  # em dash / en dash
+FORBIDDEN_EXACT = []  # 转载原文保留中文破折号
 
 
 def main():
@@ -49,8 +49,8 @@ def main():
         for t in ("广东省湖南攸县商会", "才猎天下大数据", "湾区（广东）数字经济研究院"):
             if t not in html:
                 issues.append(f"{name}: 友情链接缺「{t}」")
-        if html.count('data-nav="') != 9:
-            issues.append(f"{name}: 主导航项数 != 9")
+        if html.count('data-nav="') != 10:
+            issues.append(f"{name}: 导航项数 != 10")
         for q in ("qrcode-consult.png", "qrcode-official.png"):
             if q not in html:
                 issues.append(f"{name}: 页脚缺二维码 {q}")
