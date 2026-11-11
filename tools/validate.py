@@ -56,6 +56,10 @@ def main():
                 issues.append(f"{name}: 页脚缺二维码 {q}")
         if 'canonical" href="https://www.oals.cn/' not in html:
             issues.append(f"{name}: canonical 未绑定 www.oals.cn")
+        for tag in ('rel="canonical"', 'property="og:image"', 'name="twitter:card"',
+                    '"BreadcrumbList"', '"WebSite"', '"Organization"'):
+            if tag not in html:
+                issues.append(f"{name}: SEO 缺 {tag}")
 
         for txt in re.findall(r'<p class="one-line">(.*?)</p>', html, re.S):
             plain = re.sub(r"<[^>]+>", "", txt).strip()
@@ -66,6 +70,15 @@ def main():
         foot = html.split('<footer class="footer"')[-1]
         if ">首页</a>" in foot:
             issues.append(f"{name}: 页脚导航含首页")
+
+    xml = open(os.path.join(ROOT, "sitemap.xml"), encoding="utf-8").read()
+    for h in pages:
+        nm = os.path.basename(h)
+        if nm == "index.html":
+            if "https://www.oals.cn/<" not in xml:
+                issues.append("sitemap.xml 缺首页")
+        elif "/" + nm + "<" not in xml:
+            issues.append(f"sitemap.xml 缺 {nm}")
 
     print(f"检查页面 {len(pages)} 个，问题 {len(issues)} 条")
     for x in issues:

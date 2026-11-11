@@ -5,6 +5,7 @@
 import os
 import json
 import sys
+from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_content import (  # noqa: E402
@@ -82,36 +83,88 @@ def head(page, title, desc, keywords):
         key = "services"
     if key.startswith("article-"):
         key = "articles"
+    url = SITE_URL if page == "index.html" else SITE_URL + page
+    art = next((a for a in ARTICLES if a["slug"] == page), None)
+    og_img = SITE_URL + ("assets/img/" + art["cover"] if art else "assets/img/og-image.png")
+    og_alt = art["cover_alt"] if art else (BRAND + " · " + SLOGAN)
+    full_title = title if page == "index.html" else title + " | " + BRAND
+
+    crumbs = [(BRAND, SITE_URL)]
+    if page != "index.html":
+        if art:
+            crumbs.append(("一鸣述评", SITE_URL + "articles.html"))
+            crumbs.append((art["card_title"], url))
+        else:
+            label = next((n for n, h, _ in NAV if h == page), None)
+            if label is None:
+                if page == "founder.html":
+                    crumbs.append(("工作室简介", SITE_URL + "about.html"))
+                    label = "主理人"
+                elif page.startswith("svc-"):
+                    crumbs.append(("服务体系", SITE_URL + "services.html"))
+                    label = next((s["title"] for s in SERVICES
+                                  if s["slug"] + ".html" == page), title)
+                else:
+                    label = title
+            crumbs.append((label, url))
+
     ld = {
         "@context": "https://schema.org",
         "@graph": [
-            {"@type": "Organization", "name": BRAND, "description": SLOGAN},
-            {"@type": "WebPage", "name": title, "description": desc, "inLanguage": "zh-CN"},
+            {"@type": "Organization", "@id": SITE_URL + "#organization",
+             "name": BRAND, "url": SITE_URL, "description": SLOGAN,
+             "logo": {"@type": "ImageObject", "url": SITE_URL + "assets/img/logo.svg"}},
+            {"@type": "WebSite", "@id": SITE_URL + "#website", "url": SITE_URL,
+             "name": BRAND, "publisher": {"@id": SITE_URL + "#organization"},
+             "inLanguage": "zh-CN"},
+            {"@type": "WebPage", "@id": url + "#webpage", "url": url,
+             "name": title, "description": desc,
+             "isPartOf": {"@id": SITE_URL + "#website"},
+             "breadcrumb": {"@id": url + "#breadcrumb"}, "inLanguage": "zh-CN"},
+            {"@type": "BreadcrumbList", "@id": url + "#breadcrumb",
+             "itemListElement": [
+                 {"@type": "ListItem", "position": i + 1, "name": n, "item": u}
+                 for i, (n, u) in enumerate(crumbs)]},
         ],
     }
+    if art:
+        ld["@graph"].append({
+            "@type": "Article", "@id": url + "#article",
+            "headline": art["title"], "description": art["desc"],
+            "image": og_img, "datePublished": art["date_iso"],
+            "author": {"@id": SITE_URL + "#organization"},
+            "publisher": {"@id": SITE_URL + "#organization"},
+            "mainEntityOfPage": {"@id": url + "#webpage"},
+            "articleSection": "一鸣述评", "keywords": art["keywords"],
+            "inLanguage": "zh-CN"})
+    og_dims = ('' if art else
+               '<meta property="og:image:width" content="1200">\n'
+               '<meta property="og:image:height" content="630">\n')
     return f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title} | {BRAND}</title>
+<title>{full_title}</title>
 <meta name="description" content="{desc}">
 <meta name="keywords" content="{keywords}">
 <meta name="author" content="{BRAND}">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#1a6bff">
-<link rel="canonical" href="{SITE_URL}{'' if page == 'index.html' else page}">
+<link rel="canonical" href="{url}">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{SITE_URL}{'' if page == 'index.html' else page}">
-<meta property="og:image" content="{SITE_URL}assets/img/svc-lecture.jpg">
+<meta property="og:type" content="{'article' if art else 'website'}">
 <meta property="og:site_name" content="{BRAND}">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:title" content="{title}">
+<meta property="og:url" content="{url}">
+<meta property="og:title" content="{full_title}">
 <meta property="og:description" content="{desc}">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{title}">
+<meta property="og:image" content="{og_img}">
+<meta property="og:image:alt" content="{og_alt}">
+{og_dims}<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{full_title}">
 <meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{og_img}">
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="assets/js/main.js" defer></script>
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
@@ -402,12 +455,6 @@ def page_article(a):
                       + "".join(parts) + '</div>' + back + '</div>', "section article-start")
             + section(sec_head("MORE / 延伸阅读", "与述评相关的工作方向")
                       + f'<div class="grid g3">{rel_cards}</div>', "section rel-tight"))
-    ld = {"@context": "https://schema.org", "@type": "Article",
-          "headline": a["title"], "datePublished": a["date_iso"],
-          "author": {"@type": "Organization", "name": BRAND},
-          "publisher": {"@type": "Organization", "name": BRAND},
-          "description": a["desc"], "inLanguage": "zh-CN"}
-    body = '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + '</script>' + body
     return shell(a["slug"], a["full_title"], a["desc"], a["keywords"], body, "articles")
 
 
@@ -509,8 +556,9 @@ def page_index():
              "围绕专题讲座、育人实践共建、辅导员教研交流等方向，欢迎高校、辅导员同仁与青年学生开展交流。",
              note="以大学生思想政治教育为核心，注重实践创新与学术研究。")
     b += section(sec_head("FAQ / 常见问题", "关于工作室，先了解这些") + faq(FAQ[:4]))
-    return shell("index.html", BRAND + " · " + SLOGAN, SLOGAN,
-                 "雷一鸣工作室,雷桂平,大学生思想政治教育,辅导员工作室,六大核心素质,育人实践", b, "index")
+    return shell("index.html", "雷一鸣工作室｜大学生思想政治教育与成长陪伴",
+                 "雷一鸣工作室以雷一鸣老师为主导，集教学、研究、指导和服务于一体，围绕价值引领、六大核心素质培养、专题讲座、主题班会、社会实践与个性化成长辅导，陪伴大学生全面发展。",
+                 "雷一鸣工作室,雷桂平,大学生思想政治教育,辅导员工作室,六大核心素质,一鸣述评,心理咨询,育人实践", b, "index")
 
 
 # ------------------------------------------------------------------ 内页
@@ -711,27 +759,33 @@ def page_contact():
 
 
 def page_sitemap():
-    b = page_hero("网站地图", "雷一鸣工作室官网栏目一览。", ["栏目总览", "服务体系", "交流合作"], "网站地图")
+    b = page_hero("网站地图", "按主题查阅雷一鸣工作室官网的全部栏目与文章。",
+                  ["栏目总览", "服务体系", "一鸣述评"], "网站地图")
+
     def group(title, ico, items):
         lis = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in items)
         return (f'<div class="mini-card glass reveal"><h4>{icon(ico)} {title}</h4>'
                 f'<ul class="site-list">{lis}</ul></div>')
+
     groups = [
         group("主导航", "grid", [(t, h) for t, h, _ in NAV]),
         group("服务体系", "layers", [(s["title"], s["slug"] + ".html") for s in SERVICES]),
-        group("更多信息", "link", [("主理人", "founder.html"), ("六大核心素质", "svc-quality.html"),
-                                  ("一鸣述评", "articles.html"), ("网站地图", "sitemap.html")]
+        group("一鸣述评", "pen", [("述评栏目总览", "articles.html")]
               + [(a["card_title"], a["slug"]) for a in ARTICLES]),
+        group("工作室与站点", "users", [("工作室简介", "about.html"), ("主理人", "founder.html"),
+                                    ("六大核心素质", "svc-quality.html"),
+                                    ("网站地图", "sitemap.html")]),
     ]
-    b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部内容")
-                 + f'<div class="grid g3">{"".join(groups)}</div>')
+    b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部页面",
+                          "首页、业务栏目、述评文章与站点信息均可在此找到。")
+                 + f'<div class="grid g2 sitemap-grid">{"".join(groups)}</div>')
     b += cta("从服务体系开始了解", "六项服务覆盖价值引领、素质培养、主题活动、成长辅导与教研推广。",
              [("查看服务体系", "services.html", "btn-white"), ("交流合作", "contact.html", "btn-outline")])
-    return shell("sitemap.html", "网站地图", "雷一鸣工作室官网全部栏目与页面索引。",
-                 "雷一鸣工作室,网站地图,栏目索引", b, "sitemap")
+    return shell("sitemap.html", "网站地图",
+                 "雷一鸣工作室官网网站地图，包含主导航、服务体系、一鸣述评全部文章与工作室相关页面的完整索引。",
+                 "雷一鸣工作室,网站地图,栏目索引,一鸣述评,服务体系", b, "sitemap")
 
 
-# ------------------------------------------------------------------ 输出
 def write(name, html):
     path = os.path.join(ROOT, name)
     with open(path, "w", encoding="utf-8") as f:
@@ -755,6 +809,12 @@ def main():
         write(s["slug"] + ".html", page_service(s))
 
     # 站点级文件：域名统一取自 SITE_URL
+    TODAY = date.today().isoformat()
+    PRIORITY = {
+        "index.html": "1.0", "about.html": "0.8", "services.html": "0.8",
+        "counseling.html": "0.8", "articles.html": "0.8", "founder.html": "0.7",
+        "contact.html": "0.7", "sitemap.html": "0.3",
+    }
     pages = (["index.html"] + [x[1] for x in NAV[1:]] + [s["slug"] + ".html" for s in SERVICES]
              + ["sitemap.html", "founder.html"] + [a["slug"] for a in ARTICLES])
     seen, urls = set(), []
@@ -763,12 +823,17 @@ def main():
             continue
         seen.add(pg)
         loc = SITE_URL if pg == "index.html" else SITE_URL + pg
-        urls.append("  <url><loc>%s</loc><changefreq>monthly</changefreq><priority>%s</priority></url>"
-                    % (loc, "1.0" if pg == "index.html" else "0.7"))
+        pr = PRIORITY.get(pg, "0.7" if pg.startswith("svc-") else "0.6")
+        cf = ("weekly" if pg in ("index.html", "articles.html")
+              else "yearly" if pg.startswith("article-") else "monthly")
+        urls.append("  <url><loc>%s</loc><lastmod>%s</lastmod>"
+                    "<changefreq>%s</changefreq><priority>%s</priority></url>"
+                    % (loc, TODAY, cf, pr))
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "\n".join(urls) + "\n</urlset>\n")
-    write("robots.txt", "User-agent: *\nAllow: /\nSitemap: " + SITE_URL + "sitemap.xml\n")
+    write("robots.txt", "User-agent: *\nAllow: /\nDisallow: /tools/\nSitemap: "
+          + SITE_URL + "sitemap.xml\n")
     write("CNAME", "www.oals.cn\n")
     write(".nojekyll", "")
     print("total", len(seen), "pages + sitemap.xml / robots.txt / CNAME / .nojekyll")
