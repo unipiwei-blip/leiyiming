@@ -815,25 +815,33 @@ def main():
         "counseling.html": "0.8", "articles.html": "0.8", "founder.html": "0.7",
         "contact.html": "0.7", "sitemap.html": "0.3",
     }
-    pages = (["index.html"] + [x[1] for x in NAV[1:]] + [s["slug"] + ".html" for s in SERVICES]
-             + ["sitemap.html", "founder.html"] + [a["slug"] for a in ARTICLES])
+    # 逻辑顺序：首页 -> 主导航 -> 业务详情 -> 二级页 -> 述评文章 -> 网站地图
+    pages = (["index.html"] + [x[1] for x in NAV[1:]]
+             + [s["slug"] + ".html" for s in SERVICES]
+             + ["founder.html"] + [a["slug"] for a in ARTICLES]
+             + ["sitemap.html"])
     seen, urls = set(), []
     for pg in pages:
-        if pg in seen:
+        if pg in seen or pg == "404.html":
             continue
         seen.add(pg)
+        path = os.path.join(ROOT, pg)
+        lm = (date.fromtimestamp(os.path.getmtime(path)).isoformat()
+              if os.path.exists(path) else TODAY)
         loc = SITE_URL if pg == "index.html" else SITE_URL + pg
         pr = PRIORITY.get(pg, "0.7" if pg.startswith("svc-") else "0.6")
         cf = ("weekly" if pg in ("index.html", "articles.html")
               else "yearly" if pg.startswith("article-") else "monthly")
         urls.append("  <url><loc>%s</loc><lastmod>%s</lastmod>"
                     "<changefreq>%s</changefreq><priority>%s</priority></url>"
-                    % (loc, TODAY, cf, pr))
+                    % (loc, lm, cf, pr))
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "\n".join(urls) + "\n</urlset>\n")
-    write("robots.txt", "User-agent: *\nAllow: /\nDisallow: /tools/\nSitemap: "
-          + SITE_URL + "sitemap.xml\n")
+    write("robots.txt", "User-agent: *\nAllow: /\n"
+          "Disallow: /tools/\nDisallow: /404.html\n"
+          "Disallow: /CNAME\nDisallow: /.nojekyll\n"
+          "Sitemap: " + SITE_URL + "sitemap.xml\n")
     write("CNAME", "www.oals.cn\n")
     write(".nojekyll", "")
     print("total", len(seen), "pages + sitemap.xml / robots.txt / CNAME / .nojekyll")

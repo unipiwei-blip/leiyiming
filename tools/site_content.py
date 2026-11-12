@@ -25,6 +25,9 @@ FRIEND_LINKS = [
     ("广东省湖南攸县商会", "https://www.zyyous.com/"),
     ("才猎天下大数据", "https://www.91cailie.com/"),
     ("湾区（广东）数字经济研究院", "https://www.baydea.com/"),
+    ("AI建站-跨境极站", "https://www.gosite.com.cn/"),
+    ("莞促集团", "https://www.guancu.com/"),
+    ("东莞市常平个体私营企业协会", "https://www.ichangping.cn/"),
 ]
 
 # 页脚「重点业务」六项，双列呈现

@@ -16,7 +16,25 @@ FORBIDDEN_EXACT = []  # 转载原文保留中文破折号
 
 
 def main():
-    pages = sorted(glob.glob(os.path.join(ROOT, "*.html")))
+    pages = sorted(p for p in glob.glob(os.path.join(ROOT, "*.html"))
+                   if os.path.basename(p) != "404.html")
+    # 404 页：独立自包含、故意不含 canonical / noindex / JSON-LD，且不能被收录
+    nf = os.path.join(ROOT, "404.html")
+    if not os.path.exists(nf):
+        issues.append("缺 404.html")
+    else:
+        f404 = open(nf, encoding="utf-8").read()
+        for bad in ("canonical", "noindex", "404-promo.jpg", "订阅", "meta refresh"):
+            if bad in f404:
+                issues.append(f"404.html 含 {bad}")
+        if 'href="/"' not in f404:
+            issues.append("404.html 缺首页入口")
+    rb = open(os.path.join(ROOT, "robots.txt"), encoding="utf-8").read()
+    if "Disallow: /404.html" not in rb:
+        issues.append("robots.txt 未屏蔽 404.html")
+    sm = open(os.path.join(ROOT, "sitemap.xml"), encoding="utf-8").read()
+    if "404.html" in sm:
+        issues.append("sitemap.xml 不应包含 404.html")
     issues = []
     for p in pages:
         name = os.path.basename(p)

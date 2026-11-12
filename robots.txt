@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /tools/
+Disallow: /404.html
+Disallow: /CNAME
+Disallow: /.nojekyll
 Sitemap: https://www.oals.cn/sitemap.xml
