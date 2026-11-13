@@ -11,6 +11,24 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 
 META = [
     {
+        "paras": os.path.join(W4, "a5_paras.txt"),
+        "slug": "article-bansheng-guitu.html",
+        "label": "特刊", "date": "2026年11月13日", "date_iso": "2026-11-13",
+        "title": "四十四岁，人生二州一城，半生归途",
+        "card_title": "四十四岁，人生二州一城",
+        "full_title": "特刊｜四十四岁，人生二州一城，半生归途",
+        "summary": "从江州、洪州到莞城，回望四十四年走过的路，也写下对教育与生活的新理解。",
+        "teaser": "三个地方，三段人生",
+        "cover": "cover-guitu.jpg", "cover_alt": "通往城市天际线的道路插画",
+        "tags": ["人生随笔", "教育人生", "江州洪州莞城", "半生归途"],
+        "keywords": "雷一鸣,四十四岁,江州,洪州,莞城,半生归途,雷一鸣工作室,特刊",
+        "desc": "雷一鸣工作室特刊：四十四岁生日之际，从故乡江州、求学洪州到谋生莞城，回望二十年教育生涯与半生归途。",
+        "highlight_kw": ["四十四岁了。", "不知不觉，半生已过。", "江州，是我出生和成长的地方。",
+                         "洪州，是我求学的地方。", "莞城，是我谋生的地方。",
+                         "三个地方，三段人生。", "江州是来处，洪州是青春，莞城是当下。",
+                         "半生已过，归途尚远。"],
+    },
+    {
         "paras": os.path.join(W1, "paragraphs.txt"),
         "slug": "article-lengmen-juexue.html",
         "label": "一鸣述评", "date": "2026年11月10日", "date_iso": "2026-11-10",
