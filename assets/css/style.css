@@ -696,3 +696,6 @@ table.tbl th,table.tbl td{text-align:center}
 .footer-top{padding:18px 0 10px}
 .footer-tech{padding:0 0 6px}
 .footer-bottom{padding:6px 0 10px}
+
+/* ================= 第十轮：微信分享卡片方图（离屏，不使用 display:none） ================= */
+.wx-share-thumb{position:absolute;top:0;left:-9999px;width:300px;height:300px;pointer-events:none;z-index:-1}

@@ -16,6 +16,7 @@ FORBIDDEN_EXACT = []  # 转载原文保留中文破折号
 
 
 def main():
+    issues = []
     pages = sorted(p for p in glob.glob(os.path.join(ROOT, "*.html"))
                    if os.path.basename(p) != "404.html")
     # 404 页：独立自包含、故意不含 canonical / noindex / JSON-LD，且不能被收录
@@ -24,18 +25,26 @@ def main():
         issues.append("缺 404.html")
     else:
         f404 = open(nf, encoding="utf-8").read()
-        for bad in ("canonical", "noindex", "404-promo.jpg", "订阅", "meta refresh"):
+        for bad in ("canonical", "404-promo.jpg", "订阅", "meta refresh"):
             if bad in f404:
                 issues.append(f"404.html 含 {bad}")
+        if 'content="noindex,follow"' not in f404:
+            issues.append("404.html 缺 noindex,follow")
         if 'href="/"' not in f404:
             issues.append("404.html 缺首页入口")
     rb = open(os.path.join(ROOT, "robots.txt"), encoding="utf-8").read()
-    if "Disallow: /404.html" not in rb:
-        issues.append("robots.txt 未屏蔽 404.html")
+    for ua in ("Baiduspider", "Googlebot"):
+        if ua not in rb:
+            issues.append("robots.txt 缺 " + ua)
+    if "Allow: /assets/" not in rb:
+        issues.append("robots.txt 未显式允许 /assets/")
+    if "Host: www.oals.cn" not in rb:
+        issues.append("robots.txt 缺 Host")
+    if "Disallow: /404.html" in rb:
+        issues.append("robots.txt 不应屏蔽 404.html")
     sm = open(os.path.join(ROOT, "sitemap.xml"), encoding="utf-8").read()
     if "404.html" in sm:
         issues.append("sitemap.xml 不应包含 404.html")
-    issues = []
     for p in pages:
         name = os.path.basename(p)
         html = open(p, encoding="utf-8").read()
@@ -97,6 +106,53 @@ def main():
                 issues.append("sitemap.xml 缺首页")
         elif "/" + nm + "<" not in xml:
             issues.append(f"sitemap.xml 缺 {nm}")
+
+    # 微信分享卡片验收
+    from PIL import Image
+    detail = [q for q in pages if os.path.basename(q).startswith(("article-", "svc-"))]
+    others = [q for q in pages if q not in detail]
+    shares = sorted(glob.glob(os.path.join(ROOT, "assets", "img", "share-*.jpg")))
+    if len(detail) != len(shares):
+        issues.append(f"详情页 {len(detail)} 与方图 {len(shares)} 数量不等")
+    for f in shares:
+        im = Image.open(f)
+        if im.size != (400, 400):
+            issues.append(f"{os.path.basename(f)} 尺寸非 400x400")
+        if im.format != "JPEG":
+            issues.append(f"{os.path.basename(f)} 非 JPEG")
+        if im.getexif():
+            issues.append(f"{os.path.basename(f)} 含 EXIF")
+        if os.path.getsize(f) > 100 * 1024:
+            issues.append(f"{os.path.basename(f)} 超过 100KB")
+    for q in detail:
+        h = open(q, encoding="utf-8").read()
+        nm = os.path.basename(q)
+        for tag in ('itemprop="name"', 'itemprop="description"', 'itemprop="image"',
+                    'og:image:width" content="400"', 'og:image:height" content="400"',
+                    'class="wx-share-thumb"', 'twitter:card" content="summary_large_image"'):
+            if tag not in h:
+                issues.append(f"{nm}: 缺 {tag}")
+        got = []
+        for pat in (r'property="og:image" content="([^"]+)"',
+                    r'itemprop="image" content="([^"]+)"',
+                    r'class="wx-share-thumb" src="([^"]+)"'):
+            m = re.search(pat, h)
+            got.append(m.group(1) if m else "")
+        if any(not u.startswith("https://www.oals.cn/assets/img/share-") for u in got):
+            issues.append(f"{nm}: 方图 URL 非 HTTPS 绝对地址")
+        if len(set(got)) != 1:
+            issues.append(f"{nm}: og/itemprop/首图 三处 URL 不一致")
+        if 'loading="lazy"' in h.split("wx-share-thumb")[1][:200]:
+            issues.append(f"{nm}: 首图使用了 lazy")
+    for q in others:
+        h = open(q, encoding="utf-8").read()
+        if "itemprop=" in h or "wx-share-thumb" in h:
+            issues.append(f"{os.path.basename(q)}: 非详情页误带分享标签")
+    f404 = os.path.join(ROOT, "404.html")
+    if os.path.exists(f404):
+        h = open(f404, encoding="utf-8").read()
+        if "itemprop=" in h or "wx-share-thumb" in h:
+            issues.append("404.html 误带分享标签")
 
     print(f"检查页面 {len(pages)} 个，问题 {len(issues)} 条")
     for x in issues:

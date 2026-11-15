@@ -1,7 +1,19 @@
 User-agent: *
 Allow: /
+Allow: /assets/
 Disallow: /tools/
-Disallow: /404.html
 Disallow: /CNAME
 Disallow: /.nojekyll
+
+User-agent: Baiduspider
+Allow: /
+Allow: /assets/
+Disallow: /tools/
+
+User-agent: Googlebot
+Allow: /
+Allow: /assets/
+Disallow: /tools/
+
+Host: www.oals.cn
 Sitemap: https://www.oals.cn/sitemap.xml

@@ -11,6 +11,23 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 
 META = [
     {
+        "paras": os.path.join(W4, "a6_paras.txt"),
+        "slug": "article-hejie.html",
+        "label": "一鸣述评", "date": "2026年11月15日", "date_iso": "2026-11-15",
+        "title": "与自己和解，不是向生活认输",
+        "card_title": "与自己和解，不是向生活认输",
+        "full_title": "一鸣述评｜与自己和解，不是向生活认输",
+        "summary": "从中年的回望出发，谈努力与结果、被外界定义的困境，以及看清生活之后依然认真生活。",
+        "teaser": "看清生活之后，依然好好生活",
+        "cover": "cover-hejie.jpg", "cover_alt": "中年男子与镜中的自己相望的漫画",
+        "tags": ["人生随笔", "中年思考", "自我接纳", "教育人生"],
+        "keywords": "一鸣述评,与自己和解,中年,自我接纳,孔乙己的长衫,雷一鸣工作室",
+        "desc": "雷一鸣工作室一鸣述评：从中年回望出发，谈努力与结果、被外界定义的困境，以及看清生活之后接纳自己、继续认真生活。",
+        "highlight_kw": ["仿佛每个人都在向前奔跑", "有时候，我们不是不懂道理",
+                         "可人生真的需要这样吗？", "接纳自己的普通",
+                         "人到中年，最大的成长", "与自己和解，不是向生活认输"],
+    },
+    {
         "paras": os.path.join(W4, "a5_paras.txt"),
         "slug": "article-bansheng-guitu.html",
         "label": "特刊", "date": "2026年11月13日", "date_iso": "2026-11-13",

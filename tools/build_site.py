@@ -5,6 +5,7 @@
 import os
 import json
 import sys
+import re
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -76,6 +77,21 @@ def city_svg():
 
 
 # ------------------------------------------------------------------ 框架
+def share_image_name(page):
+    base = page[:-5] if page.endswith(".html") else page
+    for pre in ("article-", "svc-"):
+        if base.startswith(pre):
+            base = base[len(pre):]
+            break
+    return "share-" + base + ".jpg"
+
+
+def share_summary(text, limit=60):
+    s = re.sub(r"\s+", " ", (text or "")).strip()
+    s = s[:limit]
+    return s.rstrip("，。；、,.;:：!！?？…—- ")
+
+
 def head(page, title, desc, keywords):
     key = page[:-5] if page.endswith(".html") else page
     # 未列入主导航的业务页，归入「服务体系」栏目高亮
@@ -85,9 +101,29 @@ def head(page, title, desc, keywords):
         key = "articles"
     url = SITE_URL if page == "index.html" else SITE_URL + page
     art = next((a for a in ARTICLES if a["slug"] == page), None)
-    og_img = SITE_URL + ("assets/img/" + art["cover"] if art else "assets/img/og-image.png")
+    cover_url = SITE_URL + ("assets/img/" + art["cover"] if art else "assets/img/og-image.png")
+    og_img = cover_url
     og_alt = art["cover_alt"] if art else (BRAND + " · " + SLOGAN)
     full_title = title if page == "index.html" else title + " | " + BRAND
+
+    is_detail = page.startswith("article-") or page.startswith("svc-")
+    itemprop = ""
+    thumb = ""
+    og_desc = desc
+    if is_detail:
+        share_url = SITE_URL + "assets/img/" + share_image_name(page)
+        og_img = share_url
+        og_desc = share_summary(desc)
+        itemprop = (f'<meta itemprop="name" content="{full_title}">\n'
+                    f'<meta itemprop="description" content="{og_desc}">\n'
+                    f'<meta itemprop="image" content="{share_url}">\n')
+        thumb = (f'<img class="wx-share-thumb" src="{share_url}" alt="" '
+                 f'width="300" height="300" aria-hidden="true">\n')
+        og_dims = ('<meta property="og:image:width" content="400">\n'
+                   '<meta property="og:image:height" content="400">\n')
+    else:
+        og_dims = ('<meta property="og:image:width" content="1200">\n'
+                   '<meta property="og:image:height" content="630">\n')
 
     crumbs = [(BRAND, SITE_URL)]
     if page != "index.html":
@@ -131,15 +167,12 @@ def head(page, title, desc, keywords):
         ld["@graph"].append({
             "@type": "Article", "@id": url + "#article",
             "headline": art["title"], "description": art["desc"],
-            "image": og_img, "datePublished": art["date_iso"],
+            "image": cover_url, "datePublished": art["date_iso"],
             "author": {"@id": SITE_URL + "#organization"},
             "publisher": {"@id": SITE_URL + "#organization"},
             "mainEntityOfPage": {"@id": url + "#webpage"},
             "articleSection": "一鸣述评", "keywords": art["keywords"],
             "inLanguage": "zh-CN"})
-    og_dims = ('' if art else
-               '<meta property="og:image:width" content="1200">\n'
-               '<meta property="og:image:height" content="630">\n')
     return f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -158,10 +191,10 @@ def head(page, title, desc, keywords):
 <meta property="og:locale" content="zh_CN">
 <meta property="og:url" content="{url}">
 <meta property="og:title" content="{full_title}">
-<meta property="og:description" content="{desc}">
+<meta property="og:description" content="{og_desc}">
 <meta property="og:image" content="{og_img}">
 <meta property="og:image:alt" content="{og_alt}">
-{og_dims}<meta name="twitter:card" content="summary_large_image">
+{og_dims}{itemprop}<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{full_title}">
 <meta name="twitter:description" content="{desc}">
 <meta name="twitter:image" content="{og_img}">
@@ -170,7 +203,7 @@ def head(page, title, desc, keywords):
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 </head>
 <body data-page="{key}">
-'''
+{thumb}'''
 
 
 def topbar():
@@ -774,6 +807,7 @@ def page_sitemap():
               + [(a["card_title"], a["slug"]) for a in ARTICLES]),
         group("工作室与站点", "users", [("工作室简介", "about.html"), ("主理人", "founder.html"),
                                     ("六大核心素质", "svc-quality.html"),
+                                    ("电子名片", "mp/index.html"),
                                     ("网站地图", "sitemap.html")]),
     ]
     b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部页面",
@@ -819,7 +853,7 @@ def main():
     pages = (["index.html"] + [x[1] for x in NAV[1:]]
              + [s["slug"] + ".html" for s in SERVICES]
              + ["founder.html"] + [a["slug"] for a in ARTICLES]
-             + ["sitemap.html"])
+             + ["sitemap.html", "mp/index.html"])
     seen, urls = set(), []
     for pg in pages:
         if pg in seen or pg == "404.html":
@@ -838,10 +872,12 @@ def main():
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "\n".join(urls) + "\n</urlset>\n")
-    write("robots.txt", "User-agent: *\nAllow: /\n"
-          "Disallow: /tools/\nDisallow: /404.html\n"
-          "Disallow: /CNAME\nDisallow: /.nojekyll\n"
-          "Sitemap: " + SITE_URL + "sitemap.xml\n")
+    write("robots.txt",
+          "User-agent: *\nAllow: /\nAllow: /assets/\n"
+          "Disallow: /tools/\nDisallow: /CNAME\nDisallow: /.nojekyll\n\n"
+          "User-agent: Baiduspider\nAllow: /\nAllow: /assets/\nDisallow: /tools/\n\n"
+          "User-agent: Googlebot\nAllow: /\nAllow: /assets/\nDisallow: /tools/\n\n"
+          "Host: www.oals.cn\nSitemap: " + SITE_URL + "sitemap.xml\n")
     write("CNAME", "www.oals.cn\n")
     write(".nojekyll", "")
     print("total", len(seen), "pages + sitemap.xml / robots.txt / CNAME / .nojekyll")
