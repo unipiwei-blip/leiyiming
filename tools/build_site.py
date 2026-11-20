@@ -204,6 +204,7 @@ def head(page, title, desc, keywords):
 <meta name="keywords" content="{keywords}">
 <meta name="author" content="{BRAND}">
 <meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="baidu-site-verification" content="codeva-MnLZTKk5Nq" />
 <meta name="theme-color" content="#1a6bff">
 <link rel="canonical" href="{url}">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
