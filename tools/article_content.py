@@ -4,6 +4,7 @@
 ARTICLES = [
     {
         "slug": "article-xinli-zixun.html",
+        "category": "成长思考",
         "label": "心理成长",
         "date": "2026年11月20日",
         "date_iso": "2026-11-20",
@@ -141,6 +142,7 @@ ARTICLES = [
     },
     {
         "slug": "article-gongzuoshi-jianshe.html",
+        "category": "教育观察",
         "label": "育人实践",
         "date": "2026年11月20日",
         "date_iso": "2026-11-20",
@@ -278,6 +280,7 @@ ARTICLES = [
     },
     {
         "slug": "article-hejie.html",
+        "category": "成长思考",
         "label": "一鸣述评",
         "date": "2026年11月15日",
         "date_iso": "2026-11-15",
@@ -421,6 +424,7 @@ ARTICLES = [
     },
     {
         "slug": "article-bansheng-guitu.html",
+        "category": "成长思考",
         "label": "特刊",
         "date": "2026年11月13日",
         "date_iso": "2026-11-13",
@@ -628,6 +632,7 @@ ARTICLES = [
     },
     {
         "slug": "article-lengmen-juexue.html",
+        "category": "学术评论",
         "label": "一鸣述评",
         "date": "2026年11月10日",
         "date_iso": "2026-11-10",
@@ -779,6 +784,7 @@ ARTICLES = [
     },
     {
         "slug": "article-taitoulv.html",
+        "category": "教育观察",
         "label": "一鸣述评",
         "date": "2026年11月8日",
         "date_iso": "2026-11-08",
@@ -914,6 +920,7 @@ ARTICLES = [
     },
     {
         "slug": "article-keyan-xiezuo.html",
+        "category": "学术评论",
         "label": "一鸣述评",
         "date": "2026年11月5日",
         "date_iso": "2026-11-05",
@@ -1241,6 +1248,7 @@ ARTICLES = [
     },
     {
         "slug": "article-shebao.html",
+        "category": "学术评论",
         "label": "一鸣述评",
         "date": "2026年10月14日",
         "date_iso": "2026-10-14",
@@ -1328,6 +1336,7 @@ ARTICLES = [
     },
     {
         "slug": "article-studio-intro.html",
+        "category": "教育观察",
         "label": "工作室展示",
         "date": "2021年7月8日",
         "date_iso": "2021-07-08",

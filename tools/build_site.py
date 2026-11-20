@@ -13,7 +13,7 @@ from site_content import (  # noqa: E402
     BRAND, SLOGAN, TOPBAR_LEFT, TOPBAR_RIGHT, FOOTER_ABOUT, COPYRIGHT_NOTE,
     NAV, FRIEND_LINKS, FOOT_BIZ, CONTACT_CHANNELS, STATS, ABOUT_CARDS, SITE_URL,
     FEATURES, DIRECTIONS, FLOW, SERVICES, FAQ, FOUNDER, ARTICLE_COLUMN, ARTICLE_DIRECTIONS,
-    SUBNAV, COUNSELING,
+    ARTICLE_CATEGORIES, CATEGORY_BY_NAME, SUBNAV, COUNSELING,
 )
 from article_content import ARTICLES, ARTICLE  # noqa: E402
 
@@ -97,7 +97,7 @@ def head(page, title, desc, keywords):
     # 未列入主导航的业务页，归入「服务体系」栏目高亮
     if key in ("svc-thought", "svc-lecture", "svc-counseling"):
         key = "services"
-    if key.startswith("article-"):
+    if key.startswith(("article-", "topic-")):
         key = "articles"
     url = SITE_URL if page == "index.html" else SITE_URL + page
     art = next((a for a in ARTICLES if a["slug"] == page), None)
@@ -129,10 +129,17 @@ def head(page, title, desc, keywords):
     if page != "index.html":
         if art:
             crumbs.append(("一鸣述评", SITE_URL + "articles.html"))
+            cat = CATEGORY_BY_NAME.get(art.get("category"))
+            if cat:
+                crumbs.append((cat["name"], SITE_URL + cat["slug"]))
             crumbs.append((art["card_title"], url))
         else:
             label = next((n for n, h, _ in NAV if h == page), None)
-            if label is None:
+            if page.startswith("topic-"):
+                crumbs.append(("一鸣述评", SITE_URL + "articles.html"))
+                label = next((c["name"] for c in ARTICLE_CATEGORIES
+                              if c["slug"] == page), title)
+            elif label is None:
                 if page == "founder.html":
                     crumbs.append(("工作室简介", SITE_URL + "about.html"))
                     label = "主理人"
@@ -163,6 +170,20 @@ def head(page, title, desc, keywords):
                  for i, (n, u) in enumerate(crumbs)]},
         ],
     }
+    if page.startswith("topic-"):
+        cat = next((c for c in ARTICLE_CATEGORIES if c["slug"] == page), None)
+        if cat:
+            items = [a for a in ARTICLES if a.get("category") == cat["name"]]
+            ld["@graph"].append({
+                "@type": "CollectionPage", "@id": url + "#collection", "url": url,
+                "name": cat["name"] + " | " + BRAND, "description": cat["desc"],
+                "isPartOf": {"@id": SITE_URL + "#website"},
+                "mainEntity": {"@type": "ItemList",
+                               "numberOfItems": len(items),
+                               "itemListElement": [
+                                   {"@type": "ListItem", "position": i + 1,
+                                    "name": a["title"], "url": SITE_URL + a["slug"]}
+                                   for i, a in enumerate(items)]}})
     if art:
         ld["@graph"].append({
             "@type": "Article", "@id": url + "#article",
@@ -348,8 +369,14 @@ def cta(title, desc, buttons=None, note=""):
             f'<div class="cta-actions">{links}</div>{n}</div></div></section>')
 
 
+def pill_html(p):
+    if isinstance(p, (tuple, list)) and len(p) == 2:
+        return f'<a class="pill" href="{p[1]}">{p[0]}</a>'
+    return f'<span class="pill">{p}</span>'
+
+
 def page_hero(title, lead, pills=None, crumb=None, extra_cls=""):
-    ps = "".join(f'<span class="pill">{p}</span>' for p in (pills or []))
+    ps = "".join(pill_html(p) for p in (pills or []))
     cr = (f'<div class="crumb"><a href="index.html">{BRAND}</a> / {crumb}</div>') if crumb else ""
     cls = f' {extra_cls}' if extra_cls else ''
     return (f'<section class="page-hero{cls}"><div class="container">{cr}'
@@ -444,13 +471,15 @@ def article_cards():
 
 
 def page_articles():
-    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
-                  ARTICLE_COLUMN["tags"], extra_cls="hero-compact")
+    cat_links = [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES]
+    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"], cat_links, extra_cls="hero-compact")
     list_head = (f'<div class="sec-head center reveal"><h2 class="h2">{ARTICLE_COLUMN["list_title"]}</h2>'
-                 f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p></div>')
+                 f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p>'
+                 f'<div class="pills">{"".join(pill_html(p) for p in cat_links)}</div></div>')
     b += section(list_head + article_cards(), "section articles-first")
-    cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k])
-                    for k, (i, t, d) in enumerate(ARTICLE_DIRECTIONS))
+    cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k],
+                                link=("查看分类", c["slug"]))
+                    for k, ((i, t, d), c) in enumerate(zip(ARTICLE_DIRECTIONS, ARTICLE_CATEGORIES)))
     b += section(sec_head("TOPICS / 述评方向", ARTICLE_COLUMN["topics_title"])
                  + f'<div class="grid g3">{cards}</div>')
     b += cta("围绕教育话题继续交流", "关于大学教育、青年成长与学术积累的话题，欢迎进一步沟通。",
@@ -459,10 +488,45 @@ def page_articles():
                  "一鸣述评,教育观察,雷一鸣工作室,述评文章", b, "articles")
 
 
+def topic_cards(items):
+    cards = []
+    for i, a in enumerate(items):
+        cards.append(f'''<a class="article-card glass reveal" href="{a["slug"]}" data-page="1">
+<div class="article-card-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
+<div class="article-card-body"><span class="pill">{a.get("category", "一鸣述评")} · {a["date"]}</span>
+<h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p>
+<span class="link-more">阅读文章 {icon("arrow", 15)}</span></div></a>''')
+    return f'<div class="article-grid">{ "".join(cards) }</div>'
+
+
+def page_topic(cat):
+    items = [a for a in ARTICLES if a.get("category") == cat["name"]]
+    others = [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES if c["name"] != cat["name"]]
+    crumb = f'<a href="articles.html">一鸣述评</a> / {cat["name"]}'
+    b = page_hero(cat["name"], cat["lead"],
+                  [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES],
+                  crumb=crumb, extra_cls="hero-compact")
+    b += section(sec_head("TOPIC / 分类文章",
+                          cat["name"] + " · 共 " + str(len(items)) + " 篇",
+                          "按分类阅读一鸣述评栏目的相关文章。")
+                 + topic_cards(items), "section articles-first")
+    b += section(sec_head("MORE / 其他分类", "继续浏览其他主题")
+                 + '<div class="grid g3">'
+                 + "".join(simple_card("layers", name, "阅读该分类下的文章", "",
+                                       ("查看分类", slug)) for name, slug in others)
+                 + '<a class="card glass reveal" href="articles.html"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div><h3 class="h3">全部文章</h3><p class="one-line">浏览一鸣述评栏目</p><div class="mt-s"><a class="link-more" href="articles.html">返回栏目 ' + icon("arrow", 15) + '</a></div></a>'
+                 + '</div>')
+    return shell(cat["slug"], cat["name"] + " | 一鸣述评", cat["desc"], cat["keywords"],
+                 b, "articles")
+
+
 def page_article(a):
-    tags = "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
+    cat = CATEGORY_BY_NAME.get(a.get("category"))
+    cat_tag = f'<a class="pill" href="{cat["slug"]}">{cat["name"]}</a>' if cat else ""
+    tags = cat_tag + "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
+    crumb_cat = (f' / <a href="{cat["slug"]}">{cat["name"]}</a>' if cat else "")
     hero = f'''<section class="article-hero"><div class="container">
-<div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">一鸣述评</a> / 正文</div>
+<div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">一鸣述评</a>{crumb_cat} / 正文</div>
 <h1>{a["title"]}</h1>
 <p class="article-meta">{a["date"]}</p>
 <p class="article-lead">{a["summary"]}</p>
@@ -809,6 +873,7 @@ def page_sitemap():
         group("主导航", "grid", [(t, h) for t, h, _ in NAV]),
         group("服务体系", "layers", [(s["title"], s["slug"] + ".html") for s in SERVICES]),
         group("一鸣述评", "pen", [("述评栏目总览", "articles.html")]
+              + [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES]
               + [(a["card_title"], a["slug"]) for a in ARTICLES]),
         group("工作室与站点", "users", [("工作室简介", "about.html"), ("主理人", "founder.html"),
                                     ("六大核心素质", "svc-quality.html"),
@@ -841,6 +906,8 @@ def main():
     write("contact.html", page_contact())
     write("sitemap.html", page_sitemap())
     write("articles.html", page_articles())
+    for cat in ARTICLE_CATEGORIES:
+        write(cat["slug"], page_topic(cat))
     write("counseling.html", page_counseling())
     for a in ARTICLES:
         write(a["slug"], page_article(a))
@@ -858,6 +925,7 @@ def main():
     pages = (["index.html"] + [x[1] for x in NAV[1:]]
              + [s["slug"] + ".html" for s in SERVICES]
              + ["founder.html"] + [a["slug"] for a in ARTICLES]
+             + [c["slug"] for c in ARTICLE_CATEGORIES]
              + ["sitemap.html", "mp/index.html"])
     seen, urls = set(), []
     for pg in pages:
@@ -868,7 +936,7 @@ def main():
         lm = (date.fromtimestamp(os.path.getmtime(path)).isoformat()
               if os.path.exists(path) else TODAY)
         loc = SITE_URL if pg == "index.html" else SITE_URL + pg
-        pr = PRIORITY.get(pg, "0.7" if pg.startswith("svc-") else "0.6")
+        pr = PRIORITY.get(pg, "0.7" if pg.startswith(("svc-", "topic-")) else "0.6")
         cf = ("weekly" if pg in ("index.html", "articles.html")
               else "yearly" if pg.startswith("article-") else "monthly")
         urls.append("  <url><loc>%s</loc><lastmod>%s</lastmod>"

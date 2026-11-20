@@ -12,7 +12,7 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 META = [
     {
         "paras": os.path.join(W4, "a7_paras.txt"),
-        "slug": "article-xinli-zixun.html",
+        "slug": "article-xinli-zixun.html", "category": "成长思考",
         "label": "心理成长", "date": "2026年11月20日", "date_iso": "2026-11-20",
         "title": "大学生心理咨询怎么做？从求助时机到咨询方式的完整指引",
         "card_title": "大学生心理咨询完整指引",
@@ -32,7 +32,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a8_paras.txt"),
-        "slug": "article-gongzuoshi-jianshe.html",
+        "slug": "article-gongzuoshi-jianshe.html", "category": "教育观察",
         "label": "育人实践", "date": "2026年11月20日", "date_iso": "2026-11-20",
         "title": "高校辅导员工作室建设路径：从定位到育人实践的完整方法",
         "card_title": "辅导员工作室建设路径",
@@ -53,7 +53,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a6_paras.txt"),
-        "slug": "article-hejie.html",
+        "slug": "article-hejie.html", "category": "成长思考",
         "label": "一鸣述评", "date": "2026年11月15日", "date_iso": "2026-11-15",
         "title": "与自己和解，不是向生活认输",
         "card_title": "与自己和解，不是向生活认输",
@@ -70,7 +70,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a5_paras.txt"),
-        "slug": "article-bansheng-guitu.html",
+        "slug": "article-bansheng-guitu.html", "category": "成长思考",
         "label": "特刊", "date": "2026年11月13日", "date_iso": "2026-11-13",
         "title": "四十四岁，人生二州一城，半生归途",
         "card_title": "四十四岁，人生二州一城",
@@ -88,7 +88,7 @@ META = [
     },
     {
         "paras": os.path.join(W1, "paragraphs.txt"),
-        "slug": "article-lengmen-juexue.html",
+        "slug": "article-lengmen-juexue.html", "category": "学术评论",
         "label": "一鸣述评", "date": "2026年11月10日", "date_iso": "2026-11-10",
         "title": "当AI无所不能，我们为什么还要守护那些“冷门绝学”？",
         "card_title": "当AI无所不能，为何守护“冷门绝学”",
@@ -104,7 +104,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a3_paras.txt"),
-        "slug": "article-taitoulv.html",
+        "slug": "article-taitoulv.html", "category": "教育观察",
         "label": "一鸣述评", "date": "2026年11月8日", "date_iso": "2026-11-08",
         "title": "当大学开始统计“抬头率”，智慧教育就有了值得警惕的方向",
         "card_title": "当大学开始统计“抬头率”",
@@ -120,7 +120,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a2_paras.txt"),
-        "slug": "article-keyan-xiezuo.html",
+        "slug": "article-keyan-xiezuo.html", "category": "学术评论",
         "label": "一鸣述评", "date": "2026年11月5日", "date_iso": "2026-11-05",
         "title": "从选题到发表：AI时代高校教师如何做好一篇有质量的原创科研论文",
         "card_title": "AI时代如何做好一篇原创科研",
@@ -136,7 +136,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a1_paras.txt"),
-        "slug": "article-shebao.html",
+        "slug": "article-shebao.html", "category": "学术评论",
         "label": "一鸣述评", "date": "2026年10月14日", "date_iso": "2026-10-14",
         "title": "当社保开始“找人”：比参保率更值得关注的，是普通人的缴费能力",
         "card_title": "比参保率更值得关注缴费能力",
@@ -152,7 +152,7 @@ META = [
     },
     {
         "paras": os.path.join(W4, "a4_paras.txt"),
-        "slug": "article-studio-intro.html",
+        "slug": "article-studio-intro.html", "category": "教育观察",
         "label": "工作室展示", "date": "2021年7月8日", "date_iso": "2021-07-08",
         "title": "辅导员工作室展示④ | 雷一鸣工作室",
         "card_title": "雷一鸣工作室建设经验展示",
