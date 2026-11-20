@@ -699,3 +699,8 @@ table.tbl th,table.tbl td{text-align:center}
 
 /* ================= 第十轮：微信分享卡片方图（离屏，不使用 display:none） ================= */
 .wx-share-thumb{position:absolute;top:0;left:-9999px;width:300px;height:300px;pointer-events:none;z-index:-1}
+
+/* ================= 第十一轮：文章延伸阅读内链 ================= */
+.article-seealso{margin:30px 0 8px;padding:18px 16px;background:var(--soft,#f6f8fb);border-radius:14px}
+.article-seealso .pills{margin-top:10px;justify-content:center;flex-wrap:wrap}
+.article-seealso .pill{text-decoration:none}

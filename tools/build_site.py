@@ -481,11 +481,16 @@ def page_article(a):
                          f'alt="{blk["cap"]}" loading="lazy"><figcaption>{blk["cap"]}</figcaption></figure>')
     rel = [s for s in SERVICES if s["slug"] in ("svc-research", "svc-quality", "svc-counseling")]
     rel_cards = "".join(service_card(s, i) for i, s in enumerate(rel))
+    see = ""
+    if a.get("see_also"):
+        links = "".join(f'<a class="pill" href="{h}">{t}</a>' for t, h in a["see_also"])
+        see = (f'<div class="article-seealso center"><span class="eyebrow">延伸阅读</span>'
+               f'<div class="pills">{links}</div></div>')
     back = ('<div class="article-back center"><a class="btn btn-primary" href="articles.html">返回一鸣述评 '
-             + icon("arrow", 16) + '</a></div>')
+            + icon("arrow", 16) + '</a></div>')
     body = (hero
             + section(f'<div class="article-wrap">{cover}<div class="article-body">'
-                      + "".join(parts) + '</div>' + back + '</div>', "section article-start")
+                      + "".join(parts) + '</div>' + see + back + '</div>', "section article-start")
             + section(sec_head("MORE / 延伸阅读", "与述评相关的工作方向")
                       + f'<div class="grid g3">{rel_cards}</div>', "section rel-tight"))
     return shell(a["slug"], a["full_title"], a["desc"], a["keywords"], body, "articles")
