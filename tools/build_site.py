@@ -737,7 +737,9 @@ def page_about():
     b += cta("了解工作室的服务体系", "价值引领、素质培养、讲座座谈、育人实践、成长辅导与教研推广，协同支撑学生全面发展。",
              [("查看服务体系", "services.html", "btn-white"), ("认识主理人", "founder.html", "btn-outline")])
     b += section('<div class="center"><a class="btn btn-primary" href="assets/studio-profile.pptx" download>下载工作室简介 PPT ' + icon("arrow", 16) + '</a>'
-                 '<p class="lead mt-s">九页图文简介，可直接保存到手机查看或转发。</p></div>', "section tight")
+                 '<p class="lead mt-s">九页图文简介，可直接保存到手机查看或转发。</p>'
+                 '<div class="mt-m"><a class="btn btn-ghost" href="mp/poster.html">查看单页简介海报 ' + icon("arrow", 16) + '</a>'
+                 '<a class="btn btn-ghost" href="assets/studio-profile-poster.pdf" download>下载海报 PDF ' + icon("arrow", 16) + '</a></div></div>', "section tight")
     return shell("about.html", "工作室简介", "雷一鸣工作室简介、平台定位、使命愿景、两类需求、工作方法与发展脉络。",
                  "雷一鸣工作室简介,平台定位,使命愿景,三育人,工作方法,发展脉络,雷桂平", b, "about")
 
@@ -910,6 +912,7 @@ def page_sitemap():
         group("工作室与站点", "users", [("工作室简介", "about.html"), ("主理人", "founder.html"),
                                     ("六大核心素质", "svc-quality.html"),
                                     ("电子名片", "mp/index.html"),
+                                    ("简介海报", "mp/poster.html"),
                                     ("网站地图", "sitemap.html")]),
     ]
     b += section(sec_head("SITEMAP / 栏目一览", "按主题查阅全部页面",
@@ -958,7 +961,7 @@ def main():
              + [s["slug"] + ".html" for s in SERVICES]
              + ["founder.html"] + [a["slug"] for a in ARTICLES]
              + [c["slug"] for c in ARTICLE_CATEGORIES]
-             + ["sitemap.html", "mp/index.html"])
+             + ["sitemap.html", "mp/index.html", "mp/poster.html"])
     seen, urls = set(), []
     for pg in pages:
         if pg in seen or pg == "404.html":
