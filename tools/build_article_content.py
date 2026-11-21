@@ -11,6 +11,28 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 
 META = [
     {
+        "paras": os.path.join(W4, "a16_paras.txt"),
+        "slug": "article-apec-sizheng.html", "category": "教育观察",
+        "label": "一鸣述评", "date": "2026年11月22日", "date_iso": "2026-11-22",
+        "title": "从APEC深圳会议说起：思政课怎样讲好「大格局」",
+        "card_title": "从APEC会议谈思政课",
+        "full_title": "从APEC深圳会议说起：思政课怎样讲好「大格局」",
+        "summary": "从深圳APEC会议与青年提案的故事出发，谈怎样把宏大的时代议题讲进思政课堂、讲到学生心里。",
+        "teaser": "把大格局讲进日常课堂",
+        "cover": "cover-apec.jpg", "cover_alt": "团队围桌研讨场景插画",
+        "tags": ["思政教育", "APEC", "青年成长", "价值引领"],
+        "keywords": "APEC深圳会议,思政教育,青年参与,价值引领,亚太共同体,雷一鸣工作室",
+        "desc": "一位高校教师从APEC深圳会议与青年提案的故事说起，谈思政教育怎样把宏大的时代议题讲进课堂，帮助学生理解自己与时代的关系。",
+        "highlight_kw": ["一、从「心联通」说起：宏大叙事怎么落到人身上",
+                         "二、开放与包容：给学生看世界的多面",
+                         "三、创新与青年：从旁观者到参与者",
+                         "四、思政课怎么讲「大格局」",
+                         "五、把「大」讲进「小」"],
+        "see_also": [("思想引领与价值塑造", "svc-thought.html"),
+                     ("教育观察分类", "topic-jiaoyu-guancha.html"),
+                     ("工作室简介", "about.html")],
+    },
+    {
         "paras": os.path.join(W4, "a14_paras.txt"),
         "slug": "article-cuoshi-kongju.html", "category": "成长思考",
         "label": "大学生心理健康", "date": "2026年11月22日", "date_iso": "2026-11-22",
