@@ -13,7 +13,7 @@ from site_content import (  # noqa: E402
     BRAND, SLOGAN, TOPBAR_LEFT, TOPBAR_RIGHT, FOOTER_ABOUT, COPYRIGHT_NOTE,
     NAV, FRIEND_LINKS, FOOT_BIZ, CONTACT_CHANNELS, STATS, ABOUT_CARDS, SITE_URL,
     FEATURES, DIRECTIONS, FLOW, SERVICES, FAQ, FOUNDER, ARTICLE_COLUMN, ARTICLE_DIRECTIONS,
-    ARTICLE_CATEGORIES, CATEGORY_BY_NAME, SUBNAV, COUNSELING,
+    ARTICLE_CATEGORIES, CATEGORY_BY_NAME, ABOUT_PROFILE, SUBNAV, COUNSELING,
 )
 from article_content import ARTICLES, ARTICLE  # noqa: E402
 
@@ -666,9 +666,11 @@ def page_index():
 
 # ------------------------------------------------------------------ 内页
 def page_about():
-    b = page_hero("工作室简介", "以雷一鸣老师为主导，集教学、研究、指导和服务于一体的综合性工作平台，"
-                  "致力于提升大学生思想政治教育的质量和效果。",
+    p = ABOUT_PROFILE
+    b = page_hero("工作室简介", p["definition"],
                   ["2016 年创建", "三育人模式", "线上 + 线下"], "工作室简介")
+
+    # 一句话定义 + 平台定位（真实资料）
     intro = (f'<div class="eyebrow">POSITION / 平台定位</div><h2 class="h2">以引领大学生思想政治教育为切入点</h2>'
              f'<p class="lead">工作室通过对大学生人生观、价值观、世界观的重新认识和重新构建，'
              f'以线上与线下相结合的方式，从不同角度了解青年学生的困惑、迷茫以及核心能力的得失；'
@@ -677,18 +679,45 @@ def page_about():
              f'也为辅导员同仁更好地服务学生、教育学生、管理学生、引领学生提供力所能及的帮助。</p>')
     b += section(split_text_image(intro, "studio-plaque.jpg", "雷一鸣工作室牌匾"))
 
+    # 使命 / 愿景（从已有资料提炼，不设未来数字目标）
+    mv = (f'<div class="mini-card glass reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg></div>'
+          f'<h4>工作使命</h4><p>{p["mission"]}</p></div>'
+          f'<div class="mini-card glass reveal"><div class="ico pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>'
+          f'<h4>工作愿景</h4><p>{p["vision"]}</p></div>')
+    b += section(sec_head("PURPOSE / 使命与愿景", "把育人做进日常，也把方法留给同行")
+                 + f'<div class="grid g2">{mv}</div>')
+
+    # 两类真实需求（借鉴 PDF「我们看到的两大时代难题」）
+    needs = ""
+    for i, (ico, who, tag, desc, href, more) in enumerate(p["needs"]):
+        needs += (f'<article class="card glass reveal d{i}"><div class="ico{["", " pink"][i]}">{icon(ico)}</div>'
+                  f'<h3 class="h3">{who}</h3><span class="pill">{tag}</span>'
+                  f'<p class="one-line">{desc}</p>'
+                  f'<div class="mt-s"><a class="link-more" href="{href}">{more} {icon("arrow", 15)}</a></div></article>')
+    b += section(sec_head("NEEDS / 两类需求", p["needs_title"], p["needs_lead"])
+                 + f'<div class="grid g2">{needs}</div>')
+
+    # 工作理念 + 三育人
     cards = "".join(simple_card(ico, t, d, ["", "pink", "cyan"][i]) for i, (ico, t, d) in enumerate(ABOUT_CARDS))
     b += section(sec_head("PRINCIPLES / 工作理念", "关注成长需求，尊重个体差异") + f'<div class="grid g3">{cards}</div>')
 
-    tri = [
-        ("cap", "教书育人", "在课堂与分享中启发思考"),
-        ("grid", "管理育人", "在日常关照中明确方向"),
-        ("heart", "服务育人", "在回应需求中传递温度"),
-    ]
+    tri = [("cap", "教书育人", "在课堂与分享中启发思考"),
+           ("grid", "管理育人", "在日常关照中明确方向"),
+           ("heart", "服务育人", "在回应需求中传递温度")]
     tric = "".join(simple_card(i, t, d, ["", "pink", "orange"][k]) for k, (i, t, d) in enumerate(tri))
     b += section(sec_head("FRAMEWORK / 三育人", "教书 · 管理 · 服务同向发力",
                           "三个环节共同承担育人责任，让价值塑造伴随学生成长的全过程。")
                  + f'<div class="grid g3">{tric}</div>')
+
+    # 工作方法：五步育人路径（借鉴 PDF 分步表达）
+    b += section(sec_head("METHOD / 工作方法", "从走近青年，到沉淀方法",
+                          "五个环节前后衔接，让指导有依据、实践有落点、经验可延续。") + flow(FLOW))
+
+    # 为什么选择工作室（借鉴 PDF「为什么选帝苏」，全部基于已核实资料）
+    reasons = "".join(simple_card(ico, t, d, ["", "pink", "cyan", "orange"][i % 4])
+                      for i, (ico, t, d) in enumerate(p["reasons"]))
+    b += section(sec_head("WHY US / 选择理由", p["reasons_title"], p["reasons_lead"])
+                 + f'<div class="grid g3">{reasons}</div>')
 
     timeline = [
         "2016 年年初，雷一鸣工作室创建，搭建促进交流、探索育人机制的平台。",
@@ -698,7 +727,7 @@ def page_about():
         "持续开展教学研究与学术探索，总结推广辅导员工作的先进经验与做法。",
     ]
     lis = "".join(f'<li>{x}</li>' for x in timeline)
-    b += section(sec_head("JOURNEY / 发展脉络", "从一处平台，到一条持续的育人路径")
+    b += section(sec_head("JOURNEY / 发展脉络", p["path_title"], p["path_lead"])
                  + f'<ul class="num-list">{lis}</ul>')
 
     kws = ["思想政治教育", "六大核心素质", "价值引领", "主题班会", "社会实践", "个性化辅导",
@@ -707,8 +736,8 @@ def page_about():
                  f'<div class="keywords">{"".join(f"<span>{k}</span>" for k in kws)}</div>', "section tight")
     b += cta("了解工作室的服务体系", "价值引领、素质培养、讲座座谈、育人实践、成长辅导与教研推广，协同支撑学生全面发展。",
              [("查看服务体系", "services.html", "btn-white"), ("认识主理人", "founder.html", "btn-outline")])
-    return shell("about.html", "工作室简介", "雷一鸣工作室简介、平台定位、三育人模式与发展脉络。",
-                 "雷一鸣工作室简介,平台定位,三育人,发展脉络,雷桂平", b, "about")
+    return shell("about.html", "工作室简介", "雷一鸣工作室简介、平台定位、使命愿景、两类需求、工作方法与发展脉络。",
+                 "雷一鸣工作室简介,平台定位,使命愿景,三育人,工作方法,发展脉络,雷桂平", b, "about")
 
 
 def page_services():
