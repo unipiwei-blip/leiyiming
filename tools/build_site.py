@@ -736,6 +736,8 @@ def page_about():
                  f'<div class="keywords">{"".join(f"<span>{k}</span>" for k in kws)}</div>', "section tight")
     b += cta("了解工作室的服务体系", "价值引领、素质培养、讲座座谈、育人实践、成长辅导与教研推广，协同支撑学生全面发展。",
              [("查看服务体系", "services.html", "btn-white"), ("认识主理人", "founder.html", "btn-outline")])
+    b += section('<div class="center"><a class="btn btn-primary" href="assets/studio-profile.pptx" download>下载工作室简介 PPT ' + icon("arrow", 16) + '</a>'
+                 '<p class="lead mt-s">九页图文简介，可直接保存到手机查看或转发。</p></div>', "section tight")
     return shell("about.html", "工作室简介", "雷一鸣工作室简介、平台定位、使命愿景、两类需求、工作方法与发展脉络。",
                  "雷一鸣工作室简介,平台定位,使命愿景,三育人,工作方法,发展脉络,雷桂平", b, "about")
 
