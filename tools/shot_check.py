@@ -15,7 +15,7 @@ PAGES = ["index.html", "about.html", "services.html", "svc-quality.html",
          "article-lengmen-juexue.html", "article-taitoulv.html",
          "article-keyan-xiezuo.html", "article-shebao.html", "article-studio-intro.html",
          "article-bansheng-guitu.html", "article-hejie.html", "article-xinli-zixun.html", "article-gongzuoshi-jianshe.html",
-         "topic-jiaoyu-guancha.html", "topic-chengzhang-sikao.html", "topic-xueshu-pinglun.html",
+         "topic-gaojiao.html", "topic-qingchun.html", "topic-xueshu.html",
          "article-zhengmian.html"]
 
 

@@ -704,3 +704,9 @@ table.tbl th,table.tbl td{text-align:center}
 .article-seealso{margin:30px 0 8px;padding:18px 16px;background:var(--soft,#f6f8fb);border-radius:14px}
 .article-seealso .pills{margin-top:10px;justify-content:center;flex-wrap:wrap}
 .article-seealso .pill{text-decoration:none}
+
+/* ================= 第十二轮：十二栏目导航卡 ================= */
+a.mini-card{text-decoration:none;display:block;transition:transform .2s,box-shadow .2s}
+a.mini-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+a.mini-card h4{font-size:17px;color:var(--ink);margin-bottom:4px}
+a.mini-card p{font-size:13px;color:var(--muted);margin-bottom:8px}

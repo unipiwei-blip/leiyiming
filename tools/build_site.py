@@ -472,15 +472,15 @@ def article_cards():
 
 
 def page_articles():
+    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
+                  ["教育观察", "成长思考", "学历提升", "交流分享"], extra_cls="hero-compact")
     cat_links = [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES]
-    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"], cat_links, extra_cls="hero-compact")
     list_head = (f'<div class="sec-head center reveal"><h2 class="h2">{ARTICLE_COLUMN["list_title"]}</h2>'
-                 f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p>'
-                 f'<div class="pills">{"".join(pill_html(p) for p in cat_links)}</div></div>')
+                 f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p></div>')
     b += section(list_head + article_cards(), "section articles-first")
-    cards = "".join(simple_card(i, t, d, ["", "pink", "cyan"][k],
-                                link=("查看分类", c["slug"]))
-                    for k, ((i, t, d), c) in enumerate(zip(ARTICLE_DIRECTIONS, ARTICLE_CATEGORIES)))
+    cards = "".join(simple_card(c["sub"], c["name"], c["sub"], ["", "pink", "cyan"][k % 3],
+                                link=("阅读文章", c["slug"]))
+                    for k, c in enumerate(ARTICLE_CATEGORIES))
     b += section(sec_head("TOPICS / 述评方向", ARTICLE_COLUMN["topics_title"])
                  + f'<div class="grid g3">{cards}</div>')
     b += cta("围绕教育话题继续交流", "关于大学教育、青年成长与学术积累的话题，欢迎进一步沟通。",
@@ -502,21 +502,23 @@ def topic_cards(items):
 
 def page_topic(cat):
     items = [a for a in ARTICLES if a.get("category") == cat["name"]]
-    others = [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES if c["name"] != cat["name"]]
     crumb = f'<a href="articles.html">一鸣述评</a> / {cat["name"]}'
     b = page_hero(cat["name"], cat["lead"],
-                  [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES],
+                  [cat["sub"], "共 " + str(len(items)) + " 篇文章"],
                   crumb=crumb, extra_cls="hero-compact")
     b += section(sec_head("TOPIC / 分类文章",
                           cat["name"] + " · 共 " + str(len(items)) + " 篇",
                           "按分类阅读一鸣述评栏目的相关文章。")
                  + topic_cards(items), "section articles-first")
-    b += section(sec_head("MORE / 其他分类", "继续浏览其他主题")
-                 + '<div class="grid g3">'
-                 + "".join(simple_card("layers", name, "阅读该分类下的文章", "",
-                                       ("查看分类", slug)) for name, slug in others)
-                 + '<a class="card glass reveal" href="articles.html"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div><h3 class="h3">全部文章</h3><p class="one-line">浏览一鸣述评栏目</p><div class="mt-s"><a class="link-more" href="articles.html">返回栏目 ' + icon("arrow", 15) + '</a></div></a>'
-                 + '</div>')
+    # 12 个栏目分两组呈现，每组 6 个
+    groups = [ARTICLE_CATEGORIES[:6], ARTICLE_CATEGORIES[6:]]
+    for i, group in enumerate(groups):
+        cards = "".join(
+            f'<a class="mini-card glass reveal" href="{c["slug"]}"><h4>{c["name"]}</h4>'
+            f'<p>{c["sub"]}</p><span class="link-more">查看 {icon("arrow", 14)}</span></a>'
+            for c in group)
+        b += section(sec_head("MORE / 栏目导航", "浏览其他栏目" if i == 0 else "继续浏览栏目")
+                     + f'<div class="grid g3">{cards}</div>')
     return shell(cat["slug"], cat["name"] + " | 一鸣述评", cat["desc"], cat["keywords"],
                  b, "articles")
 
