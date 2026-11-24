@@ -472,9 +472,8 @@ def article_cards():
 
 
 def page_articles():
-    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"],
-                  ["教育观察", "成长思考", "学历提升", "交流分享"], extra_cls="hero-compact")
     cat_links = [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES]
+    b = page_hero("一鸣述评", ARTICLE_COLUMN["lead"], cat_links, extra_cls="hero-compact")
     list_head = (f'<div class="sec-head center reveal"><h2 class="h2">{ARTICLE_COLUMN["list_title"]}</h2>'
                  f'<p class="lead">{ARTICLE_COLUMN["list_lead"]}</p></div>')
     b += section(list_head + article_cards(), "section articles-first")
