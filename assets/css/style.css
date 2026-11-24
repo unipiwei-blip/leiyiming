@@ -715,3 +715,12 @@ a.mini-card p{font-size:13px;color:var(--muted);margin-bottom:8px}
 .article-author{color:var(--blue-deep);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(26,107,255,.3)}
 .article-author:hover{border-bottom-color:var(--blue)}
 .article-meta-sep{color:var(--muted);margin:0 2px}
+
+/* 第十四轮：分类页文章卡标签与链接 */
+.card-cat{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}
+.card-cat .pill{font-size:12px}
+a.pill:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.article-card-body h3 a{color:inherit;text-decoration:none}
+.article-card-body h3 a:hover,.link-more a:hover{color:var(--blue)}
+.link-more a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.article-card-shot{display:block}

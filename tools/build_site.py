@@ -488,36 +488,37 @@ def page_articles():
                  "一鸣述评,教育观察,雷一鸣工作室,述评文章", b, "articles")
 
 
-def topic_cards(items):
-    cards = []
+def topic_cards(items, cat=None):
+    cards, per = [], 4
     for i, a in enumerate(items):
-        cards.append(f'''<a class="article-card glass reveal" href="{a["slug"]}" data-page="1">
-<div class="article-card-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
-<div class="article-card-body"><span class="pill">{a.get("category", "一鸣述评")} · {a.get("author", "雷一鸣")} · {a["date"]}</span>
-<h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p>
-<span class="link-more">阅读文章 {icon("arrow", 15)}</span></div></a>''')
-    return f'<div class="article-grid">{ "".join(cards) }</div>'
+        pg = i // per + 1
+        cat_name = a.get("category", "一鸣述评")
+        cat_link = cat["slug"] if cat else CATEGORY_BY_NAME.get(cat_name, {}).get("slug", "articles.html")
+        label = (f'<div class="card-cat"><a class="pill" href="{cat_link}">{cat_name}</a>'
+                 f'<span class="pill">{a.get("author", "雷一鸣")} · {a["date"]}</span></div>')
+        cards.append(f'''<div class="article-card glass reveal" data-page="{pg}">
+<a class="article-card-shot" href="{a["slug"]}"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></a>
+<div class="article-card-body">{label}
+<h3 class="h3"><a href="{a["slug"]}">{a["card_title"]}</a></h3><p class="one-line">{a["teaser"]}</p>
+<span class="link-more"><a href="{a["slug"]}">阅读文章 {icon("arrow", 15)}</a></span></div></div>''')
+    total = (len(items) + per - 1) // per
+    if total <= 1:
+        return f'<div class="article-grid">{"".join(cards)}</div>'
+    nums = "".join(f'<button class="page-num{" active" if n == 1 else ""}" data-go="{n}">{n}</button>'
+                   for n in range(1, total + 1))
+    pager = ('<div class="pager"><button data-go="prev">上一页</button>' + nums
+             + '<button data-go="next">下一页</button></div>')
+    return f'<div class="article-grid">{"".join(cards)}</div>' + pager
 
 
 def page_topic(cat):
     items = [a for a in ARTICLES if a.get("category") == cat["name"]]
     crumb = f'<a href="articles.html">一鸣述评</a> / {cat["name"]}'
     b = page_hero(cat["name"], cat["lead"],
-                  [cat["sub"], "共 " + str(len(items)) + " 篇文章"],
+                  [(c["name"], c["slug"]) for c in ARTICLE_CATEGORIES],
                   crumb=crumb, extra_cls="hero-compact")
-    b += section(sec_head("TOPIC / 分类文章",
-                          cat["name"] + " · 共 " + str(len(items)) + " 篇",
-                          "按分类阅读一鸣述评栏目的相关文章。")
-                 + topic_cards(items), "section articles-first")
-    # 12 个栏目分两组呈现，每组 6 个
-    groups = [ARTICLE_CATEGORIES[:6], ARTICLE_CATEGORIES[6:]]
-    for i, group in enumerate(groups):
-        cards = "".join(
-            f'<a class="mini-card glass reveal" href="{c["slug"]}"><h4>{c["name"]}</h4>'
-            f'<p>{c["sub"]}</p><span class="link-more">查看 {icon("arrow", 14)}</span></a>'
-            for c in group)
-        b += section(sec_head("MORE / 栏目导航", "浏览其他栏目" if i == 0 else "继续浏览栏目")
-                     + f'<div class="grid g3">{cards}</div>')
+    sec = section(topic_cards(items, cat), "section articles-first")
+    b += sec
     return shell(cat["slug"], cat["name"] + " | 一鸣述评", cat["desc"], cat["keywords"],
                  b, "articles")
 
