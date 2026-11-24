@@ -710,3 +710,8 @@ a.mini-card{text-decoration:none;display:block;transition:transform .2s,box-shad
 a.mini-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 a.mini-card h4{font-size:17px;color:var(--ink);margin-bottom:4px}
 a.mini-card p{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+/* 第十三轮：文章作者署名 */
+.article-author{color:var(--blue-deep);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(26,107,255,.3)}
+.article-author:hover{border-bottom-color:var(--blue)}
+.article-meta-sep{color:var(--muted);margin:0 2px}

@@ -357,6 +357,10 @@ ARTICLE_CATEGORIES = [
      "lead": "围绕升学、留学与职业发展的具体问题，分享可操作的资讯与建议。",
      "desc": "一鸣述评一鸣讲堂分类：升学、留学与职业发展的交流分享。",
      "keywords": "一鸣讲堂,交流分享,升学指导,留学资讯,雷一鸣工作室"},
+    {"slug": "topic-tongzhi.html", "name": "通知公告", "sub": "公告通知",
+     "lead": "发布工作室的公开公告，包括投稿邀约、交流活动与重要说明。",
+     "desc": "一鸣述评通知公告分类：投稿邀约、行业交流活动与工作室公开公告。",
+     "keywords": "通知公告,投稿邀约,行业交流,雷一鸣工作室"},
 ]
 CATEGORY_BY_NAME = {c["name"]: c for c in ARTICLE_CATEGORIES}
 

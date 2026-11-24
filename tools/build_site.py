@@ -446,7 +446,7 @@ def article_mini_grid():
     for i, a in enumerate(ARTICLES[:3]):
         cards.append(f'''<a class="article-mini glass reveal d{i}" href="{a["slug"]}">
 <div class="mini-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
-<div class="mini-copy"><span class="pill">{a["label"]} · {a["date"]}</span>
+<div class="mini-copy"><span class="pill">{a["label"]} · {a.get("author", "雷一鸣")} · {a["date"]}</span>
 <h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p></div>
 </a>''')
     more = ('<div class="center mt-l"><a class="btn btn-primary" href="articles.html">查看全部述评 '
@@ -460,7 +460,7 @@ def article_cards():
         pg = i // per + 1
         cards.append(f'''<a class="article-card glass reveal" href="{a["slug"]}" data-page="{pg}">
 <div class="article-card-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
-<div class="article-card-body"><span class="pill">{a["label"]} · {a["date"]}</span>
+<div class="article-card-body"><span class="pill">{a["label"]} · {a.get("author", "雷一鸣")} · {a["date"]}</span>
 <h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p>
 <span class="link-more">阅读述评 {icon("arrow", 15)}</span></div></a>''')
     total = (len(ARTICLES) + per - 1) // per
@@ -493,7 +493,7 @@ def topic_cards(items):
     for i, a in enumerate(items):
         cards.append(f'''<a class="article-card glass reveal" href="{a["slug"]}" data-page="1">
 <div class="article-card-shot"><img src="assets/img/{a["cover"]}" alt="{a["cover_alt"]}" loading="lazy"></div>
-<div class="article-card-body"><span class="pill">{a.get("category", "一鸣述评")} · {a["date"]}</span>
+<div class="article-card-body"><span class="pill">{a.get("category", "一鸣述评")} · {a.get("author", "雷一鸣")} · {a["date"]}</span>
 <h3 class="h3">{a["card_title"]}</h3><p class="one-line">{a["teaser"]}</p>
 <span class="link-more">阅读文章 {icon("arrow", 15)}</span></div></a>''')
     return f'<div class="article-grid">{ "".join(cards) }</div>'
@@ -527,10 +527,14 @@ def page_article(a):
     cat_tag = f'<a class="pill" href="{cat["slug"]}">{cat["name"]}</a>' if cat else ""
     tags = cat_tag + "".join(f'<span class="pill">{t}</span>' for t in a["tags"])
     crumb_cat = (f' / <a href="{cat["slug"]}">{cat["name"]}</a>' if cat else "")
+    author = a.get("author", "雷一鸣")
+    author_href = a.get("author_href", "founder.html")
+    author_html = (f'<a class="article-author" href="{author_href}">{author}</a>'
+                   f' <span class="article-meta-sep">·</span> ')
     hero = f'''<section class="article-hero"><div class="container">
 <div class="crumb"><a href="index.html">{BRAND}</a> / <a href="articles.html">一鸣述评</a>{crumb_cat} / 正文</div>
 <h1>{a["title"]}</h1>
-<p class="article-meta">{a["date"]}</p>
+<p class="article-meta">{author_html}{a["date"]}</p>
 <p class="article-lead">{a["summary"]}</p>
 <div class="pills">{tags}</div>
 </div></section>'''

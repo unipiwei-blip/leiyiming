@@ -11,6 +11,30 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 
 META = [
     {
+        "paras": os.path.join(W4, "g1_paras.txt"),
+        "slug": "article-tougao-gonggao.html", "category": "通知公告",
+        "label": "公告", "date": "2026年11月24日", "date_iso": "2026-11-24",
+        "title": "欢迎投稿：让一鸣述评成为大家交流的平台",
+        "card_title": "欢迎投稿与行业交流",
+        "full_title": "欢迎投稿：让一鸣述评成为大家交流的平台",
+        "summary": "工作室开放投稿，欢迎育人实践、成长观察、教研学术与升学留学等方向的来稿，收录后展示作者信息便于交流。",
+        "teaser": "你写，我们认真读",
+        "cover": "cover-tougao.jpg", "cover_alt": "投稿交流主题插画",
+        "body_image": "qrcode-consult.png",
+        "body_image_cap": "扫码添加主理人微信，投稿、入群与交流",
+        "body_image_after": 25,
+        "tags": ["投稿邀约", "行业交流", "通知公告"],
+        "keywords": "投稿,一鸣述评,行业交流,雷一鸣工作室,作者展示",
+        "desc": "雷一鸣工作室投稿公告：开放育人实践、成长观察、教研学术与升学留学等方向的稿件，扫码添加主理人微信投稿、入群与交流。",
+        "highlight_kw": ["一、欢迎什么样的稿件",
+                         "二、怎么投稿",
+                         "三、收录之后会怎样",
+                         "四、几点说明"],
+        "see_also": [("通知公告栏目", "topic-tongzhi.html"),
+                     ("主理人雷一鸣", "founder.html"),
+                     ("联系交流", "contact.html")],
+    },
+    {
         "paras": os.path.join(W4, "c10_paras.txt"),
         "slug": "article-lunwen-fabiao.html", "category": "职称之路",
         "label": "职业发展", "date": "2026年11月24日", "date_iso": "2026-11-24",
@@ -796,11 +820,17 @@ for cfg in META:
         s = clean(p)
         if not s:
             continue
+        if cfg.get("body_image") and i == cfg.get("body_image_after"):
+            blocks.append({"t": "img", "src": cfg["body_image"],
+                           "cap": cfg.get("body_image_cap", "")})
         blocks.append({"t": "h" if is_h(i, s, cfg) else "p", "x": s})
     art = {k: v for k, v in cfg.items() if k not in
            ("paras", "highlight_idx", "highlight_kw", "highlight_short", "drop_kw", "drop_exact",
             "body_image", "body_image_cap", "body_image_after")}
     art["blocks"] = blocks
+    # 作者：未单独指定时统一归为主理人雷一鸣，链接到主理人介绍页
+    art["author"] = cfg.get("author", "雷一鸣")
+    art["author_href"] = cfg.get("author_href", "founder.html")
     articles.append(art)
     print(cfg["slug"], "原始段", len(raw), "-> blocks", len(blocks),
           "配图", sum(1 for b in blocks if b["t"] == "img"))
