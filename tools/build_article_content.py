@@ -11,6 +11,28 @@ W4 = os.path.join(PROJECT, "_work", "articles")
 
 META = [
     {
+        "paras": os.path.join(W4, "e1_paras.txt"),
+        "slug": "article-ynufe-napier.html", "category": "一鸣讲堂",
+        "label": "留学资讯", "date": "2026年11月25日", "date_iso": "2026-11-25",
+        "title": "不出国的英方硕士：一个中外合作项目怎么看",
+        "card_title": "中外合作硕士项目怎么看",
+        "full_title": "不出国的英方硕士：一个中外合作项目怎么看",
+        "summary": "从云南财经大学与英国爱丁堡龙比亚大学的信息科学硕士项目说起，谈中外合作办学该核验什么、算清什么。",
+        "teaser": "报名前先查编号、算时间账",
+        "cover": "cover-ynufe.jpg", "cover_alt": "校园与学习交流场景插画",
+        "tags": ["留学资讯", "中外合作办学", "在职读研", "信息科学"],
+        "keywords": "云南财经大学,爱丁堡龙比亚大学,中外合作办学,信息科学硕士,雷一鸣工作室",
+        "desc": "一位高校教师从云南财经大学与爱丁堡龙比亚大学合作硕士项目说起，谈中外合作办学的资质核验、培养模式、费用与适配人群。",
+        "highlight_kw": ["一、资质可查，是第一步",
+                         "二、培养模式：不出国，但用的是英方课程",
+                         "三、学位与费用，要算清楚",
+                         "四、谁适合报，谁要再想想",
+                         "五、时间节点别错过"],
+        "see_also": [("一鸣讲堂", "topic-jiangtang.html"),
+                     ("求学历程", "topic-qiuxue.html"),
+                     ("郑州大学申硕", "article-zzu-shenshuo.html")],
+    },
+    {
         "paras": os.path.join(W4, "d1_paras.txt"),
         "slug": "article-qingxu-wending.html", "category": "心灵驿站",
         "label": "心理健康", "date": "2026年11月24日", "date_iso": "2026-11-24",
